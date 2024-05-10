@@ -9,8 +9,7 @@ RUN apt-get update && apt-get install -y \
     && a2enmod rewrite \
     && docker-php-ext-install \
     pdo_pgsql \
-    zip \
-    pcntl
+    zip
 
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
@@ -24,7 +23,7 @@ WORKDIR /var/www/symfony
 
 COPY . /var/www/symfony
 
-RUN composer install --no-dev --optimize-autoloader
+RUN composer install --optimize-autoloader
 
 EXPOSE 80
 
