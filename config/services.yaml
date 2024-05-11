@@ -19,3 +19,6 @@ services:
     App\Service\RefreshTokenService:
         arguments:
             $ttl: '%gesdinet_jwt_refresh_token.ttl%'
+    App\EventSubscriber\LocaleSubscriber:
+        tags:
+            - { name: kernel.event_subscriber }

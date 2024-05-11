@@ -5,6 +5,8 @@ controllers:
     type: attribute
 
 api_refresh_token:
-    path: /token/refresh
+    path: /api/token/refresh
 api_login_check:
     path: /api/login_check
+api_token_invalidate:
+    path: /api/token/invalidate

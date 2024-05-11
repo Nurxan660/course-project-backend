@@ -27,6 +27,6 @@ class AuthController extends AbstractController
         $user = $this->authService->register($req->getEmail(), $req->getPassword());
         $jwt = $this->tokenManager->create($user);
         $refreshToken = $this->refreshTokenService->createRefreshToken($user);
-        return new JsonResponse(['token' => $jwt, 'refresh_token' => $refreshToken]);
+        return new JsonResponse(['token' => $jwt, 'refreshToken' => $refreshToken]);
     }
 }
