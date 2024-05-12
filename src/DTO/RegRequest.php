@@ -3,10 +3,14 @@
 namespace App\DTO;
 
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class RegRequest
 {
+    #[Assert\NotBlank]
+    #[Assert\Email]
     private string $email;
+    #[Assert\NotBlank]
     private string $password;
 
     public function __construct(RequestStack $requestStack)
