@@ -19,6 +19,9 @@ class CustomField
     #[ORM\Column(length: 255)]
     private string $type;
 
+    #[ORM\ManyToOne(targetEntity: UserCollection::class)]
+    private UserCollection $collection;
+
     public function getId(): int
     {
         return $this->id;
@@ -46,5 +49,15 @@ class CustomField
         $this->type = $type;
 
         return $this;
+    }
+
+    public function getCollection(): UserCollection
+    {
+        return $this->collection;
+    }
+
+    public function setCollection(UserCollection $collection): void
+    {
+        $this->collection = $collection;
     }
 }
