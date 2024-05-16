@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\DTO\RegResponse;
 use App\Entity\User;
 use App\Enum\Role;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,7 +18,7 @@ class AuthService
     {
     }
 
-    public function handleRegister(string $email, string $password): User
+    public function handleRegister(string $email, string $password): RegResponse
     {
         $user = $this->setUser($email, $password);
         $this->saveUser($user);
@@ -38,10 +39,10 @@ class AuthService
         $this->entityManager->flush();
     }
 
-    private function createToken(User $user): array
+    private function createToken(User $user): RegResponse
     {
         $jwt = $this->tokenManager->create($user);
         $refreshToken = $this->refreshTokenService->createRefreshToken($user);
-        return ['token' => $jwt, 'refreshToken' => $refreshToken];
+        return new RegResponse($jwt, $refreshToken, $user->getEmail());
     }
 }
