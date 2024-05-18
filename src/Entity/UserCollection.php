@@ -3,8 +3,10 @@
 namespace App\Entity;
 
 use App\Repository\UserCollectionRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity(repositoryClass: UserCollectionRepository::class)]
 class UserCollection
@@ -25,6 +27,23 @@ class UserCollection
 
     #[ORM\ManyToOne(targetEntity: CollectionCategory::class)]
     private CollectionCategory $category;
+
+    #[ORM\OneToMany(targetEntity: CustomField::class, mappedBy: 'collection', cascade: ['persist', 'remove'])]
+    private Collection $customFields;
+
+    public function __construct(string $name, string $description, ?string $imageUrl, CollectionCategory $category)
+    {
+        $this->name = $name;
+        $this->description = $description;
+        $this->imageUrl = $imageUrl;
+        $this->category = $category;
+        $this->customFields = new ArrayCollection();
+    }
+
+    public function addCustomField(CustomField $customField): void {
+        $customField->setCollection($this);
+        $this->customFields->add($customField);
+    }
 
     public function getId(): int
     {
@@ -75,5 +94,15 @@ class UserCollection
     public function setCategory(CollectionCategory $category): void
     {
         $this->category = $category;
+    }
+
+    public function getCustomFields(): Collection
+    {
+        return $this->customFields;
+    }
+
+    public function setCustomFields(Collection $customFields): void
+    {
+        $this->customFields = $customFields;
     }
 }

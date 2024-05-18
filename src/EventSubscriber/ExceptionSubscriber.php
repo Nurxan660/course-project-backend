@@ -2,20 +2,25 @@
 
 namespace App\EventSubscriber;
 
+use App\Exception\ExceptionHandler\CategoryNotFoundHandler;
 use App\Exception\ExceptionHandler\UniqueConstraintViolationHandler;
+use App\Exception\ExceptionHandler\ValidationExceptionHandler;
+use App\Exception\ValidationException;
+use App\Utils\ExceptionUtils;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ExceptionSubscriber implements EventSubscriberInterface
 {
     private array $handlers;
 
-    public function __construct(private TranslatorInterface $translator)
+    public function __construct(private ExceptionUtils $exceptionUtils)
     {
         $this->handlers = [
             new UniqueConstraintViolationHandler(),
+            new CategoryNotFoundHandler(),
+            new ValidationExceptionHandler()
         ];
     }
 
@@ -27,7 +32,7 @@ class ExceptionSubscriber implements EventSubscriberInterface
     public function onKernelException(ExceptionEvent $event): void
     {
         foreach ($this->handlers as $handler) {
-            $response = $handler->handle($event, $this->translator);
+            $response = $handler->handle($event, $this->exceptionUtils);
             if ($response !== null) {
                 $event->setResponse($response);
                 break;

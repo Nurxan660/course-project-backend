@@ -19,7 +19,7 @@ class CustomField
     #[ORM\Column(length: 255)]
     private string $type;
 
-    #[ORM\ManyToOne(targetEntity: UserCollection::class)]
+    #[ORM\ManyToOne(targetEntity: UserCollection::class, inversedBy: "customFields")]
     private UserCollection $collection;
 
     public function getId(): int
