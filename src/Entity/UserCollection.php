@@ -22,22 +22,26 @@ class UserCollection
     #[ORM\Column(type: Types::TEXT)]
     private string $description;
 
-    #[ORM\Column(length: 255)]
-    private ?string $imageUrl = null;
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $imageUrl;
 
     #[ORM\ManyToOne(targetEntity: CollectionCategory::class)]
     private CollectionCategory $category;
 
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    private User $user;
+
     #[ORM\OneToMany(targetEntity: CustomField::class, mappedBy: 'collection', cascade: ['persist', 'remove'])]
     private Collection $customFields;
 
-    public function __construct(string $name, string $description, ?string $imageUrl, CollectionCategory $category)
+    public function __construct(string $name, string $description, ?string $imageUrl, CollectionCategory $category, User $user)
     {
         $this->name = $name;
         $this->description = $description;
         $this->imageUrl = $imageUrl;
         $this->category = $category;
         $this->customFields = new ArrayCollection();
+        $this->user = $user;
     }
 
     public function addCustomField(CustomField $customField): void {
@@ -104,5 +108,15 @@ class UserCollection
     public function setCustomFields(Collection $customFields): void
     {
         $this->customFields = $customFields;
+    }
+
+    public function getUser(): User
+    {
+        return $this->user;
+    }
+
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
     }
 }

@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20240518061820 extends AbstractMigration
+final class Version20240518113551 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -41,13 +41,15 @@ final class Version20240518061820 extends AbstractMigration
         $this->addSql('CREATE TABLE "user" (id INT NOT NULL, email VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL, role VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_8D93D649E7927C74 ON "user" (email)');
         $this->addSql('CREATE INDEX email_idx ON "user" (email)');
-        $this->addSql('CREATE TABLE user_collection (id INT NOT NULL, category_id INT DEFAULT NULL, name VARCHAR(255) NOT NULL, description TEXT NOT NULL, image_url VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE user_collection (id INT NOT NULL, category_id INT DEFAULT NULL, user_id INT DEFAULT NULL, name VARCHAR(255) NOT NULL, description TEXT NOT NULL, image_url VARCHAR(255) DEFAULT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_5B2AA3DE12469DE2 ON user_collection (category_id)');
+        $this->addSql('CREATE INDEX IDX_5B2AA3DEA76ED395 ON user_collection (user_id)');
         $this->addSql('ALTER TABLE custom_field ADD CONSTRAINT FK_98F8BD31514956FD FOREIGN KEY (collection_id) REFERENCES user_collection (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE item ADD CONSTRAINT FK_1F1B251EBFC7FBAD FOREIGN KEY (user_collection_id) REFERENCES user_collection (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE item_custom_field ADD CONSTRAINT FK_57A240F0126F525E FOREIGN KEY (item_id) REFERENCES item (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE item_custom_field ADD CONSTRAINT FK_57A240F0A1E5E0D4 FOREIGN KEY (custom_field_id) REFERENCES custom_field (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE user_collection ADD CONSTRAINT FK_5B2AA3DE12469DE2 FOREIGN KEY (category_id) REFERENCES collection_category (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
+        $this->addSql('ALTER TABLE user_collection ADD CONSTRAINT FK_5B2AA3DEA76ED395 FOREIGN KEY (user_id) REFERENCES "user" (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
     }
 
     public function down(Schema $schema): void
@@ -66,6 +68,7 @@ final class Version20240518061820 extends AbstractMigration
         $this->addSql('ALTER TABLE item_custom_field DROP CONSTRAINT FK_57A240F0126F525E');
         $this->addSql('ALTER TABLE item_custom_field DROP CONSTRAINT FK_57A240F0A1E5E0D4');
         $this->addSql('ALTER TABLE user_collection DROP CONSTRAINT FK_5B2AA3DE12469DE2');
+        $this->addSql('ALTER TABLE user_collection DROP CONSTRAINT FK_5B2AA3DEA76ED395');
         $this->addSql('DROP TABLE collection_category');
         $this->addSql('DROP TABLE custom_field');
         $this->addSql('DROP TABLE item');

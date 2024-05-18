@@ -11,7 +11,7 @@ class CollectionCreateReq
     private string $description;
     #[Assert\NotBlank]
     private string $category;
-    private ?string $imageUrl;
+    private ?string $imageUrl = null;
     #[Assert\All([
         new Assert\Collection([
             'fields' => [
@@ -21,7 +21,7 @@ class CollectionCreateReq
             'allowExtraFields' => false
         ])
     ])]
-    private array $customFields;
+    private array $customFields = [];
 
     public function getName(): string
     {

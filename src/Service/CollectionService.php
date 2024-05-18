@@ -7,6 +7,7 @@ use App\Entity\CollectionCategory;
 use App\Entity\UserCollection;
 use App\Exception\CategoryNotFoundException;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CollectionService
@@ -14,7 +15,8 @@ class CollectionService
     public function __construct(private CategoryService $categoryService,
                                 private EntityManagerInterface $entityManager,
                                 private CustomFieldService $customFieldService,
-                                private TranslatorInterface $translator)
+                                private TranslatorInterface $translator,
+                                private Security $security)
     {
     }
 
@@ -39,6 +41,6 @@ class CollectionService
     private function createCollection(CollectionCreateReq $req, CollectionCategory $category): UserCollection
     {
         return new UserCollection($req->getName(), $req->getDescription(),
-            $req->getImageUrl(), $category);
+            $req->getImageUrl(), $category, $this->security->getUser());
     }
 }
