@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\DTO\CollectionCreateReq;
 use App\Exception\CategoryNotFoundException;
 use App\Exception\ValidationException;
+use App\Service\CategoryService;
 use App\Service\CollectionService;
 use App\Service\ValidatorService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,13 +20,14 @@ class CollectionController extends AbstractController
 {
     public function __construct(private CollectionService  $collectionService,
                                 private SerializerInterface $serializer,
-                                private ValidatorService $validatorService)
+                                private ValidatorService $validatorService,
+                                private CategoryService $categoryService)
     {
     }
 
     #[Route('/category', name: 'category', methods: ['GET'])]
     public function getCollectionsCategory(): JsonResponse {
-        $categories = $this->collectionService->getCollectionsCategory();
+        $categories = $this->categoryService->getAllCategories();
         return new JsonResponse($categories);
     }
 
@@ -39,5 +41,13 @@ class CollectionController extends AbstractController
         $this->validatorService->validate($collection);
         $res = $this->collectionService->handleCollectionCreate($collection);
         return new JsonResponse(["message" => $res], Response::HTTP_OK);
+    }
+
+    #[Route('/get', name: 'get', methods: ['GET'])]
+    public function getCollection(Request $request): JsonResponse {
+        $page = $request->query->getInt('page', 1);
+        $res = $this->collectionService->getCollection($page);
+        $jsonRes = $this->serializer->serialize($res, 'json');
+        return new JsonResponse($jsonRes, Response::HTTP_OK, [], true);
     }
 }

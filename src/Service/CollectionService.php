@@ -5,8 +5,12 @@ namespace App\Service;
 use App\DTO\CollectionCreateReq;
 use App\Entity\CollectionCategory;
 use App\Entity\UserCollection;
+use App\Enum\PaginationLimit;
 use App\Exception\CategoryNotFoundException;
+use App\Repository\UserCollectionRepository;
+use App\Service\Mapper\CollectionMapper;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -16,7 +20,10 @@ class CollectionService
                                 private EntityManagerInterface $entityManager,
                                 private CustomFieldService $customFieldService,
                                 private TranslatorInterface $translator,
-                                private Security $security)
+                                private Security $security,
+                                private UserCollectionRepository $collectionRepository,
+                                private CollectionMapper $collectionMapper,
+                                private PaginatorInterface $paginator)
     {
     }
 
@@ -42,5 +49,14 @@ class CollectionService
     {
         return new UserCollection($req->getName(), $req->getDescription(),
             $req->getImageUrl(), $category, $this->security->getUser());
+    }
+
+    public function getCollection(int $page): array
+    {
+        $user = $this->security->getUser();
+        $query = $this->collectionRepository->getCollectionsByUser($user);
+        $pagination = $this->paginator
+            ->paginate($query, $page, PaginationLimit::COLLECTION->value);
+        return array_map([$this->collectionMapper, 'mapToDto'], $pagination->getItems());
     }
 }

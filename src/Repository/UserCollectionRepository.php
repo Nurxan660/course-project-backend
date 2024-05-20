@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\User;
 use App\Entity\UserCollection;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -16,28 +17,10 @@ class UserCollectionRepository extends ServiceEntityRepository
         parent::__construct($registry, UserCollection::class);
     }
 
-//    /**
-//     * @return UserCollection[] Returns an array of UserCollection objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('u')
-//            ->andWhere('u.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('u.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?UserCollection
-//    {
-//        return $this->createQueryBuilder('u')
-//            ->andWhere('u.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function getCollectionsByUser(User $user): \Doctrine\ORM\QueryBuilder
+    {
+        return $this->createQueryBuilder('c')
+            ->where('c.user = :user')
+            ->setParameter('user', $user);
+    }
 }
