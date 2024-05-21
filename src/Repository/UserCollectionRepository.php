@@ -21,6 +21,7 @@ class UserCollectionRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('c')
             ->where('c.user = :user')
-            ->setParameter('user', $user);
+            ->setParameter('user', $user)
+            ->orderBy('c.id', 'ASC');
     }
 }
