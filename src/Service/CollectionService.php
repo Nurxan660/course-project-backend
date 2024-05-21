@@ -64,4 +64,12 @@ class CollectionService
         $collections = array_map([$this->collectionMapper, 'mapToCollection'], $pagination->getItems());
         return $this->collectionMapper->mapToPaginationRes($collections, $pagination->getTotalItemCount());
     }
+
+    public function deleteCollection(int $collectionId): string
+    {
+        $collection = $this->collectionRepository->find($collectionId);
+        $this->entityManager->remove($collection);
+        $this->entityManager->flush();
+        return $this->translator->trans('collection_delete_response', [], 'api_success');
+    }
 }

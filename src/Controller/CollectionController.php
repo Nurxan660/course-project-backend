@@ -50,4 +50,11 @@ class CollectionController extends AbstractController
         $jsonRes = $this->serializer->serialize($res, 'json');
         return new JsonResponse($jsonRes, Response::HTTP_OK, [], true);
     }
+
+    #[Route('/delete', name: 'delete', methods: ['DELETE'])]
+    public function deleteCollection(Request $request): JsonResponse {
+        $collectionId = $request->query->getInt('collectionId');
+        $res = $this->collectionService->deleteCollection($collectionId);
+        return new JsonResponse(["message" => $res], Response::HTTP_OK);
+    }
 }

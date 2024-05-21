@@ -4,5 +4,5 @@ namespace App\Enum;
 
 enum PaginationLimit: int
 {
-    case COLLECTION = 10;
+    case COLLECTION = 15;
 }

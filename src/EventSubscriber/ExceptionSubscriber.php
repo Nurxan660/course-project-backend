@@ -2,6 +2,7 @@
 
 namespace App\EventSubscriber;
 
+use App\Exception\CollectionNotFoundException;
 use App\Exception\ExceptionHandler\CategoryNotFoundHandler;
 use App\Exception\ExceptionHandler\UniqueConstraintViolationHandler;
 use App\Exception\ExceptionHandler\ValidationExceptionHandler;
@@ -20,7 +21,8 @@ class ExceptionSubscriber implements EventSubscriberInterface
         $this->handlers = [
             new UniqueConstraintViolationHandler(),
             new CategoryNotFoundHandler(),
-            new ValidationExceptionHandler()
+            new ValidationExceptionHandler(),
+            new CollectionNotFoundException()
         ];
     }
 

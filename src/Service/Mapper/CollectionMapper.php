@@ -12,9 +12,7 @@ class CollectionMapper
     public function mapToCollection(UserCollection $collection): CollectionRes
     {
         return new CollectionRes($collection->getId(),
-            $collection->getName(), $collection->getDescription(),
-            $collection->getImageUrl(), $collection->getCategory()->getName()
-        );
+            $collection->getName(), $collection->getDescription());
     }
 
     public function mapToPaginationRes(array $collections, int $totalPages): CollectionPaginationRes
