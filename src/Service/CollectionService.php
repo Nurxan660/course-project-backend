@@ -3,12 +3,17 @@
 namespace App\Service;
 
 use App\DTO\CollectionCreateReq;
+use App\DTO\CollectionPaginationRes;
+use App\DTO\CollectionRes;
 use App\Entity\CollectionCategory;
 use App\Entity\UserCollection;
 use App\Enum\PaginationLimit;
 use App\Exception\CategoryNotFoundException;
 use App\Repository\UserCollectionRepository;
 use App\Service\Mapper\CollectionMapper;
+use AutoMapperPlus\AutoMapper;
+use AutoMapperPlus\AutoMapperInterface;
+use AutoMapperPlus\AutoMapperPlusBundle\AutoMapperConfiguratorInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -22,8 +27,8 @@ class CollectionService
                                 private TranslatorInterface $translator,
                                 private Security $security,
                                 private UserCollectionRepository $collectionRepository,
-                                private CollectionMapper $collectionMapper,
-                                private PaginatorInterface $paginator)
+                                private PaginatorInterface $paginator,
+                                private CollectionMapper $collectionMapper)
     {
     }
 
@@ -51,12 +56,12 @@ class CollectionService
             $req->getImageUrl(), $category, $this->security->getUser());
     }
 
-    public function getCollection(int $page): array
+    public function getCollection(int $page): CollectionPaginationRes
     {
         $user = $this->security->getUser();
         $query = $this->collectionRepository->getCollectionsByUser($user);
-        $pagination = $this->paginator
-            ->paginate($query, $page, PaginationLimit::COLLECTION->value);
-        return array_map([$this->collectionMapper, 'mapToDto'], $pagination->getItems());
+        $pagination = $this->paginator->paginate($query, $page, PaginationLimit::COLLECTION->value);
+        $collections = array_map([$this->collectionMapper, 'mapToCollection'], $pagination->getItems());
+        return $this->collectionMapper->mapToPaginationRes($collections, $pagination->getTotalItemCount());
     }
 }

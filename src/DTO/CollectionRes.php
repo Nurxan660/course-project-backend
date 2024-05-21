@@ -4,7 +4,7 @@ namespace App\DTO;
 
 use App\Entity\CollectionCategory;
 
-class CollectionResponse
+class CollectionRes
 {
     private int $id;
     private string $name;

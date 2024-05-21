@@ -27,3 +27,4 @@ services:
             - { name: kernel.event_subscriber }
     App\Security\LoginSuccessHandler:
         arguments: [ '@lexik_jwt_authentication.handler.authentication_success' ]
+
