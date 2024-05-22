@@ -25,7 +25,7 @@ class UserCollection
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $imageUrl;
 
-    #[ORM\ManyToOne(targetEntity: CollectionCategory::class)]
+    #[ORM\ManyToOne(targetEntity: CollectionCategory::class, fetch: 'EAGER')]
     private CollectionCategory $category;
 
     #[ORM\ManyToOne(targetEntity: User::class)]

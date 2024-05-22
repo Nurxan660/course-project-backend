@@ -2,8 +2,10 @@
 
 namespace App\Service\Mapper;
 
+use App\DTO\CollectionEditRes;
 use App\DTO\CollectionPaginationRes;
 use App\DTO\CollectionRes;
+use App\DTO\CustomField;
 use App\Entity\UserCollection;
 use App\Enum\PaginationLimit;
 
@@ -13,6 +15,24 @@ class CollectionMapper
     {
         return new CollectionRes($collection->getId(),
             $collection->getName(), $collection->getDescription());
+    }
+
+    public function mapToEditCollectionDto(array $query): CollectionEditRes
+    {
+        return new CollectionEditRes(
+            $query[0]['id'], $query[0]['name'],
+            $query[0]['description'], $query[0]['imageUrl'],
+            $query[0]['categoryName']
+        );
+    }
+
+    public function mapToCollectionCustomField(array $query, CollectionEditRes $collectionEditRes): CollectionEditRes
+    {
+        foreach ($query as $row) {
+            $customFieldDTO = new CustomField($row['fieldId'], $row['fieldName'], $row['fieldType']);
+            $collectionEditRes->addCustomField($customFieldDTO);
+        }
+        return $collectionEditRes;
     }
 
     public function mapToPaginationRes(array $collections, int $totalPages): CollectionPaginationRes

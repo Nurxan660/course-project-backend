@@ -3,12 +3,14 @@
 namespace App\Service;
 
 use App\DTO\CollectionCreateReq;
+use App\DTO\CollectionEditRes;
 use App\DTO\CollectionPaginationRes;
 use App\DTO\CollectionRes;
 use App\Entity\CollectionCategory;
 use App\Entity\UserCollection;
 use App\Enum\PaginationLimit;
 use App\Exception\CategoryNotFoundException;
+use App\Exception\CollectionNotFoundException;
 use App\Repository\UserCollectionRepository;
 use App\Service\Mapper\CollectionMapper;
 use AutoMapperPlus\AutoMapper;
@@ -56,7 +58,7 @@ class CollectionService
             $req->getImageUrl(), $category, $this->security->getUser());
     }
 
-    public function getCollection(int $page): CollectionPaginationRes
+    public function getCollections(int $page): CollectionPaginationRes
     {
         $user = $this->security->getUser();
         $query = $this->collectionRepository->getCollectionsByUser($user);
@@ -71,5 +73,16 @@ class CollectionService
         $this->entityManager->remove($collection);
         $this->entityManager->flush();
         return $this->translator->trans('collection_delete_response', [], 'api_success');
+    }
+
+    /**
+     * @throws CollectionNotFoundException
+     */
+    public function getCollection(int $collectionId): CollectionEditRes
+    {
+        $query = $this->collectionRepository->getCollection($collectionId);
+        if(!$query) throw new CollectionNotFoundException();
+        $collectionDto = $this->collectionMapper->mapToEditCollectionDto($query);
+        return $this->collectionMapper->mapToCollectionCustomField($query, $collectionDto);
     }
 }

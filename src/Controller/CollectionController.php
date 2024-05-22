@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\DTO\CollectionCreateReq;
 use App\Exception\CategoryNotFoundException;
+use App\Exception\CollectionNotFoundException;
 use App\Exception\ValidationException;
 use App\Service\CategoryService;
 use App\Service\CollectionService;
@@ -44,9 +45,9 @@ class CollectionController extends AbstractController
     }
 
     #[Route('/get', name: 'get', methods: ['GET'])]
-    public function getCollection(Request $request): JsonResponse {
+    public function getCollections(Request $request): JsonResponse {
         $page = $request->query->getInt('page', 1);
-        $res = $this->collectionService->getCollection($page);
+        $res = $this->collectionService->getCollections($page);
         $jsonRes = $this->serializer->serialize($res, 'json');
         return new JsonResponse($jsonRes, Response::HTTP_OK, [], true);
     }
@@ -56,5 +57,16 @@ class CollectionController extends AbstractController
         $collectionId = $request->query->getInt('collectionId');
         $res = $this->collectionService->deleteCollection($collectionId);
         return new JsonResponse(["message" => $res], Response::HTTP_OK);
+    }
+
+    /**
+     * @throws CollectionNotFoundException
+     */
+    #[Route('/get/collection', name: 'get_collection', methods: ['GET'])]
+    public function getCollection(Request $request): JsonResponse {
+        $collectionId = $request->query->getInt('collectionId');
+        $res = $this->collectionService->getCollection($collectionId);
+        $jsonRes = $this->serializer->serialize($res, 'json');
+        return new JsonResponse($jsonRes, Response::HTTP_OK, [], true);
     }
 }

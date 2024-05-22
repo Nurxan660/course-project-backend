@@ -24,4 +24,14 @@ class UserCollectionRepository extends ServiceEntityRepository
             ->setParameter('user', $user)
             ->orderBy('c.id', 'ASC');
     }
+
+    public function getCollection(int $collectionId): array
+    {
+        $query = $this->createQueryBuilder('c')
+            ->select('c.id, c.name, c.description, c.imageUrl, ct.name as categoryName,
+            cf.id as fieldId, cf.name as fieldName, cf.type AS fieldType')
+            ->leftJoin('c.customFields', 'cf')->leftJoin('c.category', 'ct')
+            ->where('c.id = :id')->setParameter('id', $collectionId);
+        return $query->getQuery()->getArrayResult();
+    }
 }
