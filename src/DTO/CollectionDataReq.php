@@ -3,7 +3,7 @@
 namespace App\DTO;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class CollectionCreateReq
+class CollectionDataReq
 {
     #[Assert\NotBlank]
     private string $name;

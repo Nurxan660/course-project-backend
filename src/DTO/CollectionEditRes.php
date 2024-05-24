@@ -9,7 +9,7 @@ class CollectionEditRes
     private string $description;
     private ?string $imageUrl;
     private string $category;
-    private array $customFields;
+    private array $customFields = [];
 
     /**
      * @param int $id

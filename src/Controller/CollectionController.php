@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\DTO\CollectionCreateReq;
+use App\DTO\CollectionDataReq;
 use App\Exception\CategoryNotFoundException;
 use App\Exception\CollectionNotFoundException;
 use App\Exception\ValidationException;
@@ -38,7 +38,7 @@ class CollectionController extends AbstractController
      */
     #[Route('/create', name: 'create', methods: ['POST'])]
     public function createCollection(Request $request): JsonResponse {
-        $collection = $this->serializer->deserialize($request->getContent(), CollectionCreateReq::class, 'json');
+        $collection = $this->serializer->deserialize($request->getContent(), CollectionDataReq::class, 'json');
         $this->validatorService->validate($collection);
         $res = $this->collectionService->handleCollectionCreate($collection);
         return new JsonResponse(["message" => $res], Response::HTTP_OK);
@@ -59,14 +59,24 @@ class CollectionController extends AbstractController
         return new JsonResponse(["message" => $res], Response::HTTP_OK);
     }
 
-    /**
-     * @throws CollectionNotFoundException
-     */
     #[Route('/get/collection', name: 'get_collection', methods: ['GET'])]
     public function getCollection(Request $request): JsonResponse {
         $collectionId = $request->query->getInt('collectionId');
         $res = $this->collectionService->getCollection($collectionId);
         $jsonRes = $this->serializer->serialize($res, 'json');
         return new JsonResponse($jsonRes, Response::HTTP_OK, [], true);
+    }
+
+    /**
+     * @throws CollectionNotFoundException
+     * @throws ValidationException
+     */
+    #[Route('/edit', name: 'edit', methods: ['PUT'])]
+    public function editCollection(Request $request): JsonResponse {
+        $collection = $this->serializer->deserialize($request->getContent(), CollectionDataReq::class, 'json');
+        $collectionId = $request->query->getInt('collectionId');
+        $this->validatorService->validate($collection);
+        $res = $this->collectionService->handleCollectionEdit($collection, $collectionId);
+        return new JsonResponse(["message" => $res], Response::HTTP_OK);
     }
 }

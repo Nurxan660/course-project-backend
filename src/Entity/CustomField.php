@@ -13,7 +13,7 @@ class CustomField
     #[ORM\Column]
     private int $id;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     private string $name;
 
     #[ORM\Column(length: 255)]

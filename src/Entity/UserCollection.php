@@ -31,7 +31,7 @@ class UserCollection
     #[ORM\ManyToOne(targetEntity: User::class)]
     private User $user;
 
-    #[ORM\OneToMany(targetEntity: CustomField::class, mappedBy: 'collection', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: CustomField::class, mappedBy: 'collection', cascade: ['persist', 'remove'], fetch: 'EAGER')]
     private Collection $customFields;
 
     public function __construct(string $name, string $description, ?string $imageUrl, CollectionCategory $category, User $user)

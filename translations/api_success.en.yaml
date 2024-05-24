@@ -1,2 +1,3 @@
 collection_create_response: "Collection successfully created"
 collection_delete_response: "Collection successfully deleted"
+collection_edit_response: "Collection successfully changed"

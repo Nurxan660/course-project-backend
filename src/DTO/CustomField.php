@@ -4,12 +4,10 @@ namespace App\DTO;
 
 class CustomField
 {
-    public int $id;
-    public string $name;
-    public string $type;
+    public ?string $name;
+    public ?string $type;
 
-    public function __construct($id, $name, $type) {
-        $this->id = $id;
+    public function __construct($name, $type) {
         $this->name = $name;
         $this->type = $type;
     }

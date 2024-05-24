@@ -29,8 +29,10 @@ class CollectionMapper
     public function mapToCollectionCustomField(array $query, CollectionEditRes $collectionEditRes): CollectionEditRes
     {
         foreach ($query as $row) {
-            $customFieldDTO = new CustomField($row['fieldId'], $row['fieldName'], $row['fieldType']);
-            $collectionEditRes->addCustomField($customFieldDTO);
+            if (isset($row['fieldName'], $row['fieldType'])) {
+                $customFieldDTO = new CustomField($row['fieldName'], $row['fieldType']);
+                $collectionEditRes->addCustomField($customFieldDTO);
+            }
         }
         return $collectionEditRes;
     }

@@ -25,4 +25,15 @@ class CategoryService
         if (!$category) throw new CategoryNotFoundException();
         return $category;
     }
+
+    /**
+     * @throws CategoryNotFoundException
+     */
+    public function getUpdatedCategory(string $currentCategory, CollectionCategory $collectionCategory): CollectionCategory
+    {
+        if($currentCategory !== $collectionCategory->getName()) {
+            return $this->getCategory($currentCategory);
+        }
+        return $collectionCategory;
+    }
 }
