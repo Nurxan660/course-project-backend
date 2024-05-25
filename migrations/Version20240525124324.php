@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20240523192052 extends AbstractMigration
+final class Version20240525124324 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -29,9 +29,9 @@ final class Version20240523192052 extends AbstractMigration
         $this->addSql('CREATE SEQUENCE user_collection_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
         $this->addSql('CREATE TABLE collection_category (id INT NOT NULL, name VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_F7CCD7F15E237E06 ON collection_category (name)');
-        $this->addSql('CREATE TABLE custom_field (id INT NOT NULL, collection_id INT DEFAULT NULL, name VARCHAR(255) NOT NULL, type VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
-        $this->addSql('CREATE UNIQUE INDEX UNIQ_98F8BD315E237E06 ON custom_field (name)');
+        $this->addSql('CREATE TABLE custom_field (id INT NOT NULL, collection_id INT DEFAULT NULL, name VARCHAR(255) NOT NULL, type VARCHAR(255) NOT NULL, is_required BOOLEAN NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_98F8BD31514956FD ON custom_field (collection_id)');
+        $this->addSql('CREATE UNIQUE INDEX unique_name_collection ON custom_field (name, collection_id)');
         $this->addSql('CREATE TABLE item (id INT NOT NULL, user_collection_id INT DEFAULT NULL, name VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_1F1B251EBFC7FBAD ON item (user_collection_id)');
         $this->addSql('CREATE TABLE item_custom_field (id INT NOT NULL, item_id INT DEFAULT NULL, custom_field_id INT DEFAULT NULL, value TEXT NOT NULL, PRIMARY KEY(id))');

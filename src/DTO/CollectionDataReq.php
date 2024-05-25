@@ -16,7 +16,8 @@ class CollectionDataReq
         new Assert\Collection([
             'fields' => [
                 'name' => new Assert\NotBlank(),
-                'type' => new Assert\NotBlank()
+                'type' => new Assert\NotBlank(),
+                'isRequired' => new Assert\Type('bool')
             ],
             'allowExtraFields' => false
         ])

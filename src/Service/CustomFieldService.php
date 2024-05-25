@@ -20,8 +20,13 @@ class CustomFieldService
             $customField = new CustomField();
             $customField->setName($fieldData['name']);
             $customField->setType($fieldData['type']);
+            $customField->setIsRequired($fieldData['isRequired']);
             $collection->addCustomField($customField);
         }
+    }
+
+    public function getCustomFields(int $collectionId): array {
+        return $this->customFieldRepository->findBy(['collection' => $collectionId]);
     }
 
     public function updateCustomFields(UserCollection $currentFields, array $newFieldsData): void
