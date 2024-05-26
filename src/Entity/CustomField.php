@@ -5,7 +5,6 @@ namespace App\Entity;
 use App\Repository\CustomFieldRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Ignore;
-use Symfony\Component\Serializer\Attribute\SerializedName;
 
 #[ORM\Entity(repositoryClass: CustomFieldRepository::class)]
 #[ORM\UniqueConstraint(name: "unique_name_collection", columns: ["name", "collection_id"])]

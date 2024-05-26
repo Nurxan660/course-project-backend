@@ -29,6 +29,15 @@ class CustomFieldService
         return $this->customFieldRepository->findBy(['collection' => $collectionId]);
     }
 
+    public function getCustomFieldsMap(array $customFieldNames): array
+    {
+        $customFields = $this->customFieldRepository->findBy(['name' => $customFieldNames]);
+        $customFieldsMap = [];
+        foreach ($customFields as $customField)
+            $customFieldsMap[$customField->getName()] = $customField;
+        return $customFieldsMap;
+    }
+
     public function updateCustomFields(UserCollection $currentFields, array $newFieldsData): void
     {
         $currentFieldsMap = $this->mapCurrentFields($currentFields);

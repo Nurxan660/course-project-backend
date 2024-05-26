@@ -3,7 +3,10 @@
 namespace App\Controller;
 
 use App\DTO\ItemCreateReq;
+use App\Exception\CollectionNotFoundException;
 use App\Exception\ValidationException;
+use App\Service\ItemService;
+use App\Service\Mapper\ItemMapper;
 use App\Service\ValidatorService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -15,22 +18,21 @@ use Symfony\Component\Serializer\SerializerInterface;
 #[Route('/api/item', name: 'item_')]
 class ItemController extends AbstractController
 {
-    public function __construct(private ValidatorService $validatorService)
+    public function __construct(private ValidatorService $validatorService,
+                                private SerializerInterface $serializer,
+                                private ItemService  $itemService,)
     {
     }
 
     /**
      * @throws ValidationException
+     * @throws CollectionNotFoundException
      */
     #[Route('/create', name: 'create', methods: ['POST'])]
     public function createItem(Request $request): JsonResponse {
-
-        $req = $request->getContent();
-        $collectionId = $request->query->getInt("collectionId");
-        $data = json_decode($req, true);
-        $dto = new ItemCreateReq($collectionId, $data);
-        $this->validatorService->validate($dto);
-
-        return new JsonResponse(["message" => 'sdv'], Response::HTTP_OK);
+        $itemDto = $this->serializer->deserialize($request->getContent(), ItemCreateReq::class, 'json');
+        $this->validatorService->validate($itemDto);
+        $res = $this->itemService->handleItemCreate($itemDto);
+        return new JsonResponse(["message" => $res], Response::HTTP_OK);
     }
 }

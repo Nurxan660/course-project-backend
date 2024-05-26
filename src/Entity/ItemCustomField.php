@@ -14,7 +14,7 @@ class ItemCustomField
     #[ORM\Column]
     private int $id;
 
-    #[ORM\ManyToOne(targetEntity: Item::class)]
+    #[ORM\ManyToOne(targetEntity: Item::class, inversedBy: "itemCustomFields")]
     private Item $item;
 
     #[ORM\ManyToOne(targetEntity: CustomField::class)]
@@ -22,6 +22,12 @@ class ItemCustomField
 
     #[ORM\Column(type: Types::TEXT)]
     private string $value;
+
+    public function __construct(CustomField $customField, string $value)
+    {
+        $this->customField = $customField;
+        $this->value = $value;
+    }
 
     public function getId(): int
     {

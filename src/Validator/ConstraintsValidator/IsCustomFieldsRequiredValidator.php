@@ -4,7 +4,6 @@ namespace App\Validator\ConstraintsValidator;
 
 use App\DTO\ItemCreateReq;
 use App\Entity\CustomField;
-use App\Repository\CustomFieldRepository;
 use App\Service\CustomFieldService;
 use App\Validator\Constraints\IsCustomFieldsRequired;
 use Symfony\Component\Validator\Constraint;
@@ -20,25 +19,24 @@ class IsCustomFieldsRequiredValidator extends ConstraintValidator
     public function validate(mixed $value, Constraint $constraint): void
     {
         $this->checkConstraintType($constraint);
-        $this->checkValueType($value);
+        $value = $this->checkValueType($value);
+        if(empty($value->getCustomFieldValues())) return;
         $customFields = $this->customFieldService->getCustomFields($value->getCollectionId());
-        $customFieldValues = $value->getCustomFieldValues();
-        $this->processCustomFields($customFields, $customFieldValues, $constraint);
+        $this->processCustomFields($customFields, $value->getCustomFieldValues(), $constraint);
     }
 
     private function processCustomFields(array $customFields, array $customFieldValues, Constraint $constraint): void
     {
         foreach ($customFields as $customField) {
-            $this->checkCustomFieldType($customField);
             $this->validateCustomField($customField, $customFieldValues, $constraint);
         }
     }
 
     private function validateCustomField($customField, $customFieldValues, $constraint): void
     {
+        $customField = $this->checkCustomFieldType($customField);
         if ($customField->getIsRequired() && empty($customFieldValues[$customField->getName()])) {
-            $this->context
-                ->buildViolation($constraint->message)
+            $this->context->buildViolation($constraint->message)
                 ->setParameter('{ field }', $customField->getName())->addViolation();
         }
     }
@@ -50,17 +48,19 @@ class IsCustomFieldsRequiredValidator extends ConstraintValidator
         }
     }
 
-    private function checkValueType(mixed $value): void
+    private function checkValueType(mixed $value): ItemCreateReq
     {
         if (!$value instanceof  ItemCreateReq) {
             throw new UnexpectedValueException($value, ItemCreateReq::class);
         }
+        return $value;
     }
 
-    private function checkCustomFieldType(mixed $customField): void
+    private function checkCustomFieldType(mixed $customField): CustomField
     {
         if (!$customField instanceof CustomField) {
             throw new UnexpectedValueException($customField, CustomField::class);
         }
+        return $customField;
     }
 }

@@ -89,7 +89,7 @@ class CollectionService
     /**
      * @throws CollectionNotFoundException
      */
-    private function getCollectionById(int $collectionId): UserCollection {
+    public function getCollectionById(int $collectionId): UserCollection {
         $collection = $this->collectionRepository->find($collectionId);
         if(!$collection) throw new CollectionNotFoundException();
         return $collection;
