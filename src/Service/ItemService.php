@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\DTO\DeleteItemReq;
 use App\DTO\ItemCreateReq;
 use App\DTO\ItemListWithCollectionRes;
 use App\Entity\Item;
@@ -92,5 +93,11 @@ class ItemService
         $resDto = $this->itemMapper->mapToItemListWithCollectionDto($items->getItems());
         $resDto->setTotalPages($items->getTotalItemCount());
         return $resDto;
+    }
+
+    public function deleteItems(DeleteItemReq $req): string
+    {
+        $this->itemRepository->deleteByIds($req->getIds());
+        return $this->translator->trans('collection_delete_response', [], 'api_success');
     }
 }

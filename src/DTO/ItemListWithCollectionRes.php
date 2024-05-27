@@ -13,7 +13,7 @@ class ItemListWithCollectionRes
     private int $totalPages;
 
 
-    public function __construct(string $name, string $description, string $imageUrl, string $categoryName)
+    public function __construct(string $name = "", string $description = "", string $imageUrl = "", string $categoryName = "")
     {
         $this->name = $name;
         $this->description = $description;

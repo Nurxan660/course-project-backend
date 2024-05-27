@@ -30,11 +30,10 @@ class UserCollectionRepository extends ServiceEntityRepository
 
     public function getCollection(int $collectionId): array
     {
-        $query = $this->createQueryBuilder('c')
+        return $this->createQueryBuilder('c')
             ->select(SELF::SELECT_COLLECTION)
             ->leftJoin('c.customFields', 'cf')->leftJoin('c.category', 'ct')
             ->where('c.id = :id')
-            ->setParameter('id', $collectionId);
-        return $query->getQuery()->getArrayResult();
+            ->setParameter('id', $collectionId)->getQuery()->getResult();
     }
 }

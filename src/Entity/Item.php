@@ -23,6 +23,7 @@ class Item
     private UserCollection $collection;
 
     #[ORM\OneToMany(targetEntity: ItemCustomField::class, mappedBy: 'item', cascade: ['persist', 'remove'], fetch: 'EAGER')]
+
     private Collection $itemCustomFields;
 
     #[ORM\ManyToMany(targetEntity: "Tag", cascade: ['persist', 'remove'])]

@@ -15,6 +15,7 @@ class ItemCustomField
     private int $id;
 
     #[ORM\ManyToOne(targetEntity: Item::class, inversedBy: "itemCustomFields")]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private Item $item;
 
     #[ORM\ManyToOne(targetEntity: CustomField::class)]

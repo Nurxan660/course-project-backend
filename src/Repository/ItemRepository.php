@@ -22,13 +22,20 @@ class ItemRepository extends ServiceEntityRepository
     public function findItemsWithCustomFields(int $collectionId): \Doctrine\ORM\Query
     {
         return $this->createQueryBuilder('i')
-            ->select('i.name')
-            ->addSelect(SELF::SELECT_ITEMS_WITH_CUSTOM_FIELDS)
+            ->select('i.name, i.id')->addSelect(SELF::SELECT_ITEMS_WITH_CUSTOM_FIELDS)
             ->leftJoin('i.itemCustomFields', 'icf')->leftJoin('icf.customField', 'cf')
             ->leftJoin('i.collection', 'c')->leftJoin('c.category', 'cc')
-            ->where('i.collection = :collectionId')
-            ->andWhere('cf.showInTable = true')
-            ->setParameter('collectionId', $collectionId)
-            ->orderBy('i.id', 'ASC')->getQuery();
+            ->where('i.collection = :collectionId')->andWhere('cf.showInTable = true')
+            ->setParameter('collectionId', $collectionId)->orderBy('i.id', 'ASC')->getQuery();
+    }
+
+    public function deleteByIds(array $ids): void
+    {
+        $qb = $this->createQueryBuilder('i');
+        $qb->delete(Item::class, 'i')
+            ->where('i.id IN (:ids)')
+            ->setParameter('ids', $ids)
+            ->getQuery()
+            ->execute();
     }
 }

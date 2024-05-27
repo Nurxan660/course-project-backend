@@ -10,7 +10,7 @@ class ItemMapper
     public function mapToItemListWithCollectionDto(array $collectionWithItems): ItemListWithCollectionRes
     {
         $items = [];
-        $collection = null;
+        $collection = new ItemListWithCollectionRes();
         foreach ($collectionWithItems as $entry)
             $collection = $this->processEntry($items, $entry, $collection);
         $collection->setItems(array_values($items));
@@ -28,17 +28,14 @@ class ItemMapper
 
     private function initializeCollectionWithItemDto($collection, $entry)
     {
-        if (!$collection) {
-            return new ItemListWithCollectionRes($entry['collectionName'], $entry['description'],
-                $entry['imageUrl'], $entry['categoryName']);
-        }
-        return $collection;
+        return new ItemListWithCollectionRes($entry['collectionName'], $entry['description'],
+            $entry['imageUrl'], $entry['categoryName']);
     }
 
     private function processItem(&$items, $e): void
     {
         if (!isset($items[$e['name']])) {
-            $items[$e['name']] = new Item($e['name']);
+            $items[$e['name']] = new Item($e['name'], $e['id']);
         }
         $items[$e['name']]->addCustomField($e['value']);
     }

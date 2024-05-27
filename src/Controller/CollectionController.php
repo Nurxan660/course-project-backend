@@ -59,6 +59,9 @@ class CollectionController extends AbstractController
         return new JsonResponse(["message" => $res], Response::HTTP_OK);
     }
 
+    /**
+     * @throws CollectionNotFoundException
+     */
     #[Route('/get/collection', name: 'get_collection', methods: ['GET'])]
     public function getCollection(Request $request): JsonResponse {
         $collectionId = $request->query->getInt('collectionId');
@@ -70,6 +73,7 @@ class CollectionController extends AbstractController
     /**
      * @throws CollectionNotFoundException
      * @throws ValidationException
+     * @throws CategoryNotFoundException
      */
     #[Route('/edit', name: 'edit', methods: ['PUT'])]
     public function editCollection(Request $request): JsonResponse {
