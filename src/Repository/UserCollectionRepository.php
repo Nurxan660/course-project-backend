@@ -12,6 +12,9 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class UserCollectionRepository extends ServiceEntityRepository
 {
+    private const SELECT_COLLECTION = 'c.id, c.name, c.description, c.imageUrl, ct.name as categoryName,
+            cf.name as fieldName, cf.type AS fieldType, cf.isRequired AS fieldRequired';
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, UserCollection::class);
@@ -28,10 +31,10 @@ class UserCollectionRepository extends ServiceEntityRepository
     public function getCollection(int $collectionId): array
     {
         $query = $this->createQueryBuilder('c')
-            ->select('c.id, c.name, c.description, c.imageUrl, ct.name as categoryName,
-            cf.name as fieldName, cf.type AS fieldType, cf.isRequired AS fieldRequired')
+            ->select(SELF::SELECT_COLLECTION)
             ->leftJoin('c.customFields', 'cf')->leftJoin('c.category', 'ct')
-            ->where('c.id = :id')->setParameter('id', $collectionId);
+            ->where('c.id = :id')
+            ->setParameter('id', $collectionId);
         return $query->getQuery()->getArrayResult();
     }
 }

@@ -3,13 +3,18 @@
 namespace App\Service;
 
 use App\DTO\ItemCreateReq;
+use App\DTO\ItemListWithCollectionRes;
 use App\Entity\Item;
 use App\Entity\ItemCustomField;
 use App\Entity\Tag;
 use App\Entity\UserCollection;
 use App\Exception\CollectionNotFoundException;
 use App\Repository\CustomFieldRepository;
+use App\Repository\ItemRepository;
+use App\Repository\UserCollectionRepository;
+use App\Service\Mapper\ItemMapper;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ItemService
@@ -19,7 +24,11 @@ class ItemService
                                 private CustomFieldService $customFieldService,
                                 private TranslatorInterface $translator,
                                 private EntityManagerInterface $entityManager,
-                                private TagService $tagService)
+                                private TagService $tagService,
+                                private ItemMapper $itemMapper,
+                                private UserCollectionRepository $collectionRepository,
+                                private ItemRepository $itemRepository,
+                                private PaginatorInterface $paginator)
     {
     }
 
@@ -30,7 +39,7 @@ class ItemService
     {
         $collection = $this->collectionService->getCollectionById($dto->getCollectionId());
         $item = $this->initializeItem($dto, $collection);
-        $this->saveCollection($item);
+        $this->saveItem($item);
         return $this->translator->trans('item_create_response', [], 'api_success');
     }
 
@@ -43,7 +52,7 @@ class ItemService
         return $item;
     }
 
-    private function saveCollection(Item $item): void
+    private function saveItem(Item $item): void
     {
         $this->entityManager->persist($item);
         $this->entityManager->flush();
@@ -74,5 +83,14 @@ class ItemService
     private function createItem(ItemCreateReq $dto, UserCollection $collection): Item
     {
         return new Item($dto->getName(), $collection);
+    }
+
+    public function getCollectionWithItems(int $collectionId, int $page): ItemListWithCollectionRes
+    {
+        $query = $this->itemRepository->findItemsWithCustomFields($collectionId);
+        $items = $this->paginator->paginate($query, $page, 10);
+        $resDto = $this->itemMapper->mapToItemListWithCollectionDto($items->getItems());
+        $resDto->setTotalPages($items->getTotalItemCount());
+        return $resDto;
     }
 }

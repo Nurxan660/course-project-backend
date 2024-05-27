@@ -16,11 +16,9 @@ class CustomFieldService
     }
 
     public function addCustomFields(UserCollection $collection, array $fieldsData): void {
-        foreach ($fieldsData as $fieldData) {
-            $customField = new CustomField();
-            $customField->setName($fieldData['name']);
-            $customField->setType($fieldData['type']);
-            $customField->setIsRequired($fieldData['isRequired']);
+        foreach ($fieldsData as $fd) {
+            $customField = new CustomField($fd['name'], $fd['type'],
+                $fd['isRequired'], $fd['showInTable']);
             $collection->addCustomField($customField);
         }
     }

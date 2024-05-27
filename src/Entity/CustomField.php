@@ -24,9 +24,20 @@ class CustomField
     #[ORM\Column]
     private bool $isRequired = false;
 
+    #[ORM\Column]
+    private bool $showInTable = false;
+
     #[ORM\ManyToOne(targetEntity: UserCollection::class, inversedBy: "customFields")]
     #[Ignore]
     private UserCollection $collection;
+
+    public function __construct(string $name, string $type, bool $isRequired, bool $showInTable)
+    {
+        $this->name = $name;
+        $this->type = $type;
+        $this->isRequired = $isRequired;
+        $this->showInTable = $showInTable;
+    }
 
     public function getId(): int
     {
@@ -75,5 +86,15 @@ class CustomField
     public function setIsRequired(bool $isRequired): void
     {
         $this->isRequired = $isRequired;
+    }
+
+    public function isShowInTable(): bool
+    {
+        return $this->showInTable;
+    }
+
+    public function setShowInTable(bool $showInTable): void
+    {
+        $this->showInTable = $showInTable;
     }
 }

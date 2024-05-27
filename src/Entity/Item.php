@@ -19,7 +19,7 @@ class Item
     #[ORM\Column(length: 255)]
     private string $name;
 
-    #[ORM\ManyToOne(targetEntity: UserCollection::class)]
+    #[ORM\ManyToOne(targetEntity: UserCollection::class, inversedBy: "items")]
     private UserCollection $collection;
 
     #[ORM\OneToMany(targetEntity: ItemCustomField::class, mappedBy: 'item', cascade: ['persist', 'remove'], fetch: 'EAGER')]
@@ -31,7 +31,7 @@ class Item
     public function __construct(string $name, UserCollection $userCollection)
     {
         $this->name = $name;
-        $this->userCollection = $userCollection;
+        $this->collection = $userCollection;
         $this->itemCustomFields = new ArrayCollection();
         $this->tags = new ArrayCollection();
     }
@@ -75,5 +75,10 @@ class Item
     public function setTags(Collection $tags): void
     {
         $this->tags = $tags;
+    }
+
+    public function getItemCustomFields(): Collection
+    {
+        return $this->itemCustomFields;
     }
 }

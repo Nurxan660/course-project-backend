@@ -5,7 +5,6 @@ namespace App\Service;
 use App\DTO\CollectionDataReq;
 use App\DTO\CollectionEditRes;
 use App\DTO\CollectionPaginationRes;
-use App\DTO\CollectionRes;
 use App\Entity\CollectionCategory;
 use App\Entity\UserCollection;
 use App\Enum\PaginationLimit;

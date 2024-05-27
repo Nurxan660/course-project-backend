@@ -34,6 +34,9 @@ class UserCollection
     #[ORM\OneToMany(targetEntity: CustomField::class, mappedBy: 'collection', cascade: ['persist', 'remove'], fetch: 'EAGER')]
     private Collection $customFields;
 
+    #[ORM\OneToMany(targetEntity: Item::class, mappedBy: 'collection', cascade: ['persist', 'remove'],  fetch: 'EAGER')]
+    private Collection $items;
+
     public function __construct(string $name, string $description, ?string $imageUrl, CollectionCategory $category, User $user)
     {
         $this->name = $name;
@@ -41,6 +44,7 @@ class UserCollection
         $this->imageUrl = $imageUrl;
         $this->category = $category;
         $this->customFields = new ArrayCollection();
+        $this->items = new ArrayCollection();
         $this->user = $user;
     }
 
