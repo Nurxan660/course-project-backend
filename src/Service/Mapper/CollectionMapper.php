@@ -14,7 +14,14 @@ class CollectionMapper
     public function mapToCollection(UserCollection $collection): CollectionRes
     {
         return new CollectionRes($collection->getId(),
-            $collection->getName(), $collection->getDescription());
+            $collection->getName(), $collection->getCategory()->getName());
+    }
+
+    public function mapToCollectionBasic(array $collectionArray): CollectionRes
+    {
+        $c = $collectionArray[0];
+        return new CollectionRes($c['id'],
+            $c['name'], $c['categoryName'], $c['description'], $c['imageUrl']);
     }
 
     public function mapToEditCollectionDto(array $query): CollectionEditRes
@@ -30,7 +37,8 @@ class CollectionMapper
     {
         foreach ($query as $row) {
             if (isset($row['fieldName'], $row['fieldType'], $row['fieldRequired'])) {
-                $customFieldDTO = new CustomField($row['fieldName'], $row['fieldType'], $row['fieldRequired']);
+                $customFieldDTO = new CustomField($row['fieldName'],
+                    $row['fieldType'], $row['fieldRequired'], $row['showInTable']);
                 $collectionEditRes->addCustomField($customFieldDTO);
             }
         }

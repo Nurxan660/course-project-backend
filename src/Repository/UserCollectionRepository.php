@@ -36,4 +36,13 @@ class UserCollectionRepository extends ServiceEntityRepository
             ->where('c.id = :id')
             ->setParameter('id', $collectionId)->getQuery()->getResult();
     }
+
+    public function getCollectionBasic(int $collectionId): array
+    {
+        return $this->createQueryBuilder('c')
+            ->select('c.id, c.name, c.description, c.imageUrl, ct.name as categoryName')
+            ->leftJoin('c.category', 'ct')
+            ->where('c.id = :id')
+            ->setParameter('id', $collectionId)->getQuery()->getResult();
+    }
 }

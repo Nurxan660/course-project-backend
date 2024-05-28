@@ -2,11 +2,15 @@
 
 namespace App\Service;
 
+use App\Entity\Item;
+use App\Entity\Tag;
 use App\Repository\TagRepository;
+use Doctrine\ORM\EntityManagerInterface;
 
 class TagService
 {
-    public function __construct(private TagRepository $tagRepository)
+    public function __construct(private TagRepository $tagRepository,
+                                private EntityManagerInterface $entityManager)
     {
     }
 
@@ -17,5 +21,35 @@ class TagService
         foreach ($tags as $tag)
             $tagsMap[$tag->getName()] = $tag;
         return $tagsMap;
+    }
+
+    public function updateTags(Item $item, array $editedTags): void
+    {
+        $currentTagsMap = $this->mapCurrentTags($item);
+        $this->removeTags($item, array_diff($currentTagsMap, $editedTags));
+        $this->addTags(array_diff($editedTags, $currentTagsMap), $item);
+        $this->entityManager->flush();
+    }
+
+    public function addTags(array $tagsToAdd, Item $item): void {
+        foreach ($tagsToAdd as $tagName) {
+            $tag = $this->tagRepository->findOneBy(['name' => $tagName]);
+            if ($tag) $item->addTag($tag);
+            else $item->addTag(new Tag($tagName));
+        }
+    }
+
+    public function removeTags(Item $item, array $tagsToDelete): void {
+        foreach ($item->getTags() as $tag) {
+            if(!$tag instanceof Tag) continue;
+            if (in_array($tag->getName(), $tagsToDelete)) $item->removeTag($tag);
+        }
+    }
+
+    private function mapCurrentTags(Item $item): array
+    {
+        return array_map(function (Tag $tag) {
+            return $tag->getName();
+        }, $item->getTags()->toArray());
     }
 }

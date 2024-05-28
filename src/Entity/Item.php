@@ -22,7 +22,7 @@ class Item
     #[ORM\ManyToOne(targetEntity: UserCollection::class, inversedBy: "items")]
     private UserCollection $collection;
 
-    #[ORM\OneToMany(targetEntity: ItemCustomField::class, mappedBy: 'item', cascade: ['persist', 'remove'], fetch: 'EAGER')]
+    #[ORM\OneToMany(targetEntity: ItemCustomField::class, mappedBy: 'item', cascade: ['persist', 'remove'])]
 
     private Collection $itemCustomFields;
 
@@ -44,6 +44,10 @@ class Item
 
     public function addTag(Tag $tag): void {
         $this->tags->add($tag);
+    }
+
+    public function removeTag(Tag $tag): void {
+        $this->tags->removeElement($tag);
     }
 
     public function getId(): int
@@ -81,5 +85,10 @@ class Item
     public function getItemCustomFields(): Collection
     {
         return $this->itemCustomFields;
+    }
+
+    public function getTags(): Collection
+    {
+        return $this->tags;
     }
 }

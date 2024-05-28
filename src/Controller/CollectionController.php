@@ -72,6 +72,17 @@ class CollectionController extends AbstractController
 
     /**
      * @throws CollectionNotFoundException
+     */
+    #[Route('/get/collection/basic', name: 'get_collection_basic', methods: ['GET'])]
+    public function getCollectionBasic(Request $request): JsonResponse {
+        $collectionId = $request->query->getInt('collectionId');
+        $res = $this->collectionService->getCollectionBasic($collectionId);
+        $jsonRes = $this->serializer->serialize($res, 'json');
+        return new JsonResponse($jsonRes, Response::HTTP_OK, [], true);
+    }
+
+    /**
+     * @throws CollectionNotFoundException
      * @throws ValidationException
      * @throws CategoryNotFoundException
      */

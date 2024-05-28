@@ -2,34 +2,25 @@
 
 namespace App\Service\Mapper;
 
-use App\DTO\ItemListWithCollectionRes;
+use App\DTO\ItemListRes;
 use App\DTO\Pojo\Item;
 
 class ItemMapper
 {
-    public function mapToItemListWithCollectionDto(array $collectionWithItems): ItemListWithCollectionRes
+    public function mapToItemListWithCollectionDto(array $collectionWithItems): ItemListRes
     {
         $items = [];
-        $collection = new ItemListWithCollectionRes();
-        foreach ($collectionWithItems as $entry)
-            $collection = $this->processEntry($items, $entry, $collection);
-        $collection->setItems(array_values($items));
-        return $collection;
+        $resDto = new ItemListRes();
+        foreach ($collectionWithItems as $e) $resDto = $this->processEntry($items, $e, $resDto);
+        $resDto->setItems(array_values($items));
+        return $resDto;
     }
 
-    private function processEntry(array &$items, $entry, &$collection): ItemListWithCollectionRes
+    private function processEntry(array &$items, $e, ItemListRes &$resDto): ItemListRes
     {
-        $collection = $this->initializeCollectionWithItemDto($collection, $entry);
-        $this->processItem($items, $entry);
-        $collection->addCustomFieldName($entry['fieldName']);
-        return $collection;
-    }
-
-
-    private function initializeCollectionWithItemDto($collection, $entry)
-    {
-        return new ItemListWithCollectionRes($entry['collectionName'], $entry['description'],
-            $entry['imageUrl'], $entry['categoryName']);
+        $this->processItem($items, $e);
+        $resDto->addCustomFieldName($e['fieldName'], $e['show']);
+        return $resDto;
     }
 
     private function processItem(&$items, $e): void
@@ -37,7 +28,7 @@ class ItemMapper
         if (!isset($items[$e['name']])) {
             $items[$e['name']] = new Item($e['name'], $e['id']);
         }
-        $items[$e['name']]->addCustomField($e['value']);
+        if($e['show']) $items[$e['name']]->addCustomField($e['value']);
     }
 
 }

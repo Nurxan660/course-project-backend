@@ -21,10 +21,10 @@ class ItemCustomField
     #[ORM\ManyToOne(targetEntity: CustomField::class)]
     private CustomField $customField;
 
-    #[ORM\Column(type: Types::TEXT)]
-    private string $value;
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $value;
 
-    public function __construct(CustomField $customField, string $value)
+    public function __construct(CustomField $customField, ?string $value)
     {
         $this->customField = $customField;
         $this->value = $value;
@@ -35,7 +35,7 @@ class ItemCustomField
         return $this->id;
     }
 
-    public function getValue(): string
+    public function getValue(): ?string
     {
         return $this->value;
     }

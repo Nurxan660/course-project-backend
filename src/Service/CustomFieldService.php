@@ -3,15 +3,22 @@
 namespace App\Service;
 
 use App\Entity\CustomField;
+use App\Entity\Item;
+use App\Entity\ItemCustomField;
 use App\Entity\UserCollection;
 use App\Repository\CustomFieldRepository;
+use App\Repository\ItemCustomFieldRepository;
+use App\Repository\ItemRepository;
+use App\Service\Mapper\CustomFieldMapper;
 use Doctrine\ORM\EntityManagerInterface;
 
 class CustomFieldService
 {
 
     public function __construct(private EntityManagerInterface $entityManager,
-                                private CustomFieldRepository $customFieldRepository)
+                                private CustomFieldRepository $customFieldRepository,
+                                private ItemRepository $itemRepository,
+                                private CustomFieldMapper  $customFieldMapper)
     {
     }
 
@@ -45,6 +52,16 @@ class CustomFieldService
         $this->entityManager->flush();
     }
 
+    public function updateCustomFieldValues(Item $item, array $customFields): void
+    {
+        foreach ($item->getItemCustomFields() as $field) {
+            if (!$field instanceof ItemCustomField) break;
+            $fieldName = $field->getCustomField()->getName();
+            if(isset($customFields[$fieldName]) && $field->getValue() !== $customFields[$fieldName])
+                $field->setValue($customFields[$fieldName]);
+        }
+    }
+
     private function mapCurrentFields(UserCollection $currentFields): array
     {
         $currentFieldsMap = [];
@@ -68,5 +85,11 @@ class CustomFieldService
         foreach ($fieldsToDelete as $field) {
             $this->entityManager->remove($field);
         }
+    }
+
+    public function getCustomFieldsWithValues(int $itemId): array
+    {
+        $customFieldsValues = $this->itemRepository->getCustomFieldsWithValues($itemId);
+        return $this->customFieldMapper->mapToCustomFieldValues($customFieldsValues);
     }
 }

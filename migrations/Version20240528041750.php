@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20240527172430 extends AbstractMigration
+final class Version20240528041750 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -39,7 +39,7 @@ final class Version20240527172430 extends AbstractMigration
         $this->addSql('CREATE TABLE item_tag (item_id INT NOT NULL, tag_id INT NOT NULL, PRIMARY KEY(item_id, tag_id))');
         $this->addSql('CREATE INDEX IDX_E49CCCB1126F525E ON item_tag (item_id)');
         $this->addSql('CREATE INDEX IDX_E49CCCB1BAD26311 ON item_tag (tag_id)');
-        $this->addSql('CREATE TABLE item_custom_field (id INT NOT NULL, item_id INT DEFAULT NULL, custom_field_id INT DEFAULT NULL, value TEXT NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE item_custom_field (id INT NOT NULL, item_id INT DEFAULT NULL, custom_field_id INT DEFAULT NULL, value TEXT DEFAULT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_57A240F0126F525E ON item_custom_field (item_id)');
         $this->addSql('CREATE INDEX IDX_57A240F0A1E5E0D4 ON item_custom_field (custom_field_id)');
         $this->addSql('CREATE TABLE refresh_token (id INT NOT NULL, refresh_token VARCHAR(128) NOT NULL, username VARCHAR(255) NOT NULL, valid TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, PRIMARY KEY(id))');

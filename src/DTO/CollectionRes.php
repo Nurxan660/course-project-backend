@@ -12,11 +12,13 @@ class CollectionRes
     private ?string $imageUrl;
     private string $category;
 
-     function __construct(int $id, string $name, string $category)
+     function __construct(int $id, string $name, string $category, string $description = '', string $imageUrl = '')
     {
         $this->id = $id;
         $this->name = $name;
         $this->category = $category;
+        $this->description = $description;
+        $this->imageUrl = $imageUrl;
     }
 
     public function getId(): int

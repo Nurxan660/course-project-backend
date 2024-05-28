@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\DTO\DeleteItemReq;
 use App\DTO\ItemCreateReq;
+use App\DTO\ItemEditReq;
 use App\Exception\CollectionNotFoundException;
 use App\Exception\ValidationException;
 use App\Service\ItemService;
@@ -50,6 +51,15 @@ class ItemController extends AbstractController
     {
         $ids = $this->serializer->deserialize($request->getContent(), DeleteItemReq::class, 'json');
         $res = $this->itemService->deleteItems($ids);
+        return new JsonResponse(["message" => $res], Response::HTTP_OK);
+    }
+
+    #[Route('/edit', name: 'edit', methods: ['PUT'])]
+    public function editItem(Request $request): JsonResponse
+    {
+        $itemId = $request->query->getInt("itemId");
+        $dto = $this->serializer->deserialize($request->getContent(), ItemEditReq::class, 'json');
+        $res = $this->itemService->handleItemEdit($itemId, $dto);
         return new JsonResponse(["message" => $res], Response::HTTP_OK);
     }
 }

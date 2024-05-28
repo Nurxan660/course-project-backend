@@ -4,7 +4,9 @@ namespace App\Service;
 
 use App\DTO\DeleteItemReq;
 use App\DTO\ItemCreateReq;
-use App\DTO\ItemListWithCollectionRes;
+use App\DTO\ItemEditReq;
+use App\DTO\ItemListRes;
+use App\Entity\CustomField;
 use App\Entity\Item;
 use App\Entity\ItemCustomField;
 use App\Entity\Tag;
@@ -61,9 +63,10 @@ class ItemService
 
     private function addItemCustomFields(ItemCreateReq $dto, Item $item, array $customFieldsMap): void {
         foreach ($dto->getCustomFieldValues() as $name => $customFieldValue) {
-            if(!isset($customFieldsMap[$name])) continue;
-                $itemCustomField = new ItemCustomField($customFieldsMap[$name], $customFieldValue);
-                $item->addItemCustomField($itemCustomField);
+            if (!isset($customFieldsMap[$name])) continue;
+            $value = trim($customFieldValue) === '' ? null : $customFieldValue;
+            $itemCustomField = new ItemCustomField($customFieldsMap[$name], $value);
+            $item->addItemCustomField($itemCustomField);
         }
     }
 
@@ -86,7 +89,7 @@ class ItemService
         return new Item($dto->getName(), $collection);
     }
 
-    public function getCollectionWithItems(int $collectionId, int $page): ItemListWithCollectionRes
+    public function getCollectionWithItems(int $collectionId, int $page): ItemListRes
     {
         $query = $this->itemRepository->findItemsWithCustomFields($collectionId);
         $items = $this->paginator->paginate($query, $page, 10);
@@ -99,5 +102,14 @@ class ItemService
     {
         $this->itemRepository->deleteByIds($req->getIds());
         return $this->translator->trans('collection_delete_response', [], 'api_success');
+    }
+
+    public function handleItemEdit(int $itemId, ItemEditReq $data): string
+    {
+        $item = $this->itemRepository->findItemById($itemId);
+        $this->customFieldService->updateCustomFieldValues($item, $data->getCustomFields());
+        $item->setName($data->getName());
+        $this->tagService->updateTags($item, $data->getTags());
+        return $this->translator->trans('collection_edit_response', [], 'api_success');
     }
 }
