@@ -18,6 +18,7 @@ class Like
     private User $user;
 
     #[ORM\ManyToOne(targetEntity: Item::class, inversedBy: "likes")]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private Item $item;
 
     /**

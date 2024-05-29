@@ -19,6 +19,9 @@ class Item
     #[ORM\Column(length: 255)]
     private string $name;
 
+    #[ORM\Column(type: 'datetime')]
+    private \DateTimeInterface $createdAt;
+
     #[ORM\ManyToOne(targetEntity: UserCollection::class, inversedBy: "items")]
     private UserCollection $collection;
 
@@ -38,6 +41,7 @@ class Item
         $this->itemCustomFields = new ArrayCollection();
         $this->tags = new ArrayCollection();
         $this->likes = new ArrayCollection();
+        $this->createdAt = new \DateTimeImmutable();
     }
 
     public function addItemCustomField(ItemCustomField $itemCustomField): void {

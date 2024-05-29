@@ -11,8 +11,10 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ItemRepository extends ServiceEntityRepository
 {
-    private const SELECT_ITEMS_WITH_CUSTOM_FIELDS = "cf.name AS fieldName, cf.showInTable as show, 
+    private const SELECT_ITEMS_WITH_CUSTOM_FIELDS = "cf.name AS fieldName, cf.showInTable AS show, 
     cc.name AS categoryName, icf.value AS value";
+    private const SELECT_LAST_ADDED_ITEMS = "i.id, i.name AS itemName, c.name as collectionName, 
+    c.id as collectionId, u.fullName";
 
     public function __construct(ManagerRegistry $registry)
     {
@@ -71,5 +73,15 @@ class ItemRepository extends ServiceEntityRepository
             ->leftJoin('icf.customField', 'cf')
             ->where('i.id = :id')
             ->setParameter('id', $itemId)->getQuery()->getOneOrNullResult();
+    }
+
+    public function getLastAddedItems(): array
+    {
+        return $this->createQueryBuilder('i')
+            ->select(self::SELECT_LAST_ADDED_ITEMS)
+            ->leftJoin('i.collection', 'c')
+            ->leftJoin('c.user', 'u')
+            ->orderBy('i.createdAt', 'DESC')
+            ->setMaxResults(5)->getQuery()->getArrayResult();
     }
 }

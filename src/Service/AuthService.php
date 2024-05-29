@@ -21,9 +21,12 @@ class AuthService
     {
     }
 
-    public function handleRegister(string $email, string $password): RegResponse
+    /**
+     * @throws UserNotFoundException
+     */
+    public function handleRegister(string $email, string $password, string $fullName): RegResponse
     {
-        $user = $this->setUser($email, $password);
+        $user = $this->setUser($email, $password, $fullName);
         $this->saveUser($user);
         return $this->createToken($user);
     }
@@ -32,9 +35,9 @@ class AuthService
      * @throws UserNotFoundException
      */
 
-    private function setUser(string $email, string $password): User
+    private function setUser(string $email, string $password, string $fullName): User
     {
-        $user = new User($email, Role::USER);
+        $user = new User($email, Role::USER, $fullName);
         $hashedPassword = $this->passwordHasher->hashPassword($user, $password);
         $user->setPassword($hashedPassword);
         return $user;
@@ -50,6 +53,6 @@ class AuthService
     {
         $jwt = $this->tokenManager->create($user);
         $refreshToken = $this->refreshTokenService->createRefreshToken($user);
-        return new RegResponse($jwt, $refreshToken, $user->getEmail());
+        return new RegResponse($jwt, $refreshToken, $user->getFullName());
     }
 }

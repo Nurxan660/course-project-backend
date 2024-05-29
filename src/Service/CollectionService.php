@@ -67,6 +67,11 @@ class CollectionService
         return $this->collectionMapper->mapToPaginationRes($collections, $pagination->getTotalItemCount());
     }
 
+    public function getLargestCollections(): array
+    {
+        return $this->collectionRepository->getLargestCollections();
+    }
+
     public function deleteCollection(int $collectionId): string
     {
         $collection = $this->collectionRepository->find($collectionId);

@@ -22,15 +22,23 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     private string $email;
 
     #[ORM\Column(length: 255)]
+    private string $fullName;
+
+    #[ORM\Column(type: 'datetime')]
+    private \DateTimeInterface $registerDate;
+
+    #[ORM\Column(length: 255)]
     private string $password;
 
     #[ORM\Column(type: 'string', enumType: Role::class)]
     private Role $role;
 
-    public function __construct(string $email, Role $role)
+    public function __construct(string $email, Role $role, string $fullName)
     {
         $this->email = $email;
         $this->role = $role;
+        $this->fullName = $fullName;
+        $this->registerDate = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -75,5 +83,10 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     public function getUserIdentifier(): string
     {
         return $this->email;
+    }
+
+    public function getFullName(): string
+    {
+        return $this->fullName;
     }
 }

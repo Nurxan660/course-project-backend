@@ -133,4 +133,9 @@ class ItemService
         if(!$res) throw new ItemNotFoundException();
         return $this->itemMapper->mapToItemWithLikesDto($res);
     }
+
+    public function getLastAddedItems(): array
+    {
+        return $this->itemRepository->getLastAddedItems();
+    }
 }

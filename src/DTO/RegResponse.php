@@ -6,13 +6,13 @@ class RegResponse implements \JsonSerializable
 {
     private string $token;
     private string $refreshToken;
-    private string $email;
+    private string $fullName;
 
-    public function __construct(string $token, string $refreshToken, string $email)
+    public function __construct(string $token, string $refreshToken, string $fullName)
     {
         $this->token = $token;
         $this->refreshToken = $refreshToken;
-        $this->email = $email;
+        $this->fullName = $fullName;
     }
 
     public function getToken(): string
@@ -25,9 +25,9 @@ class RegResponse implements \JsonSerializable
         return $this->refreshToken;
     }
 
-    public function getEmail(): string
+    public function getFullName(): string
     {
-        return $this->email;
+        return $this->fullName;
     }
 
     public function jsonSerialize(): array
@@ -35,7 +35,7 @@ class RegResponse implements \JsonSerializable
         return [
             'token' => $this->getToken(),
             'refreshToken' => $this->getRefreshToken(),
-            'email' => $this->getEmail()
+            'fullName' => $this->getFullName()
         ];
     }
 }

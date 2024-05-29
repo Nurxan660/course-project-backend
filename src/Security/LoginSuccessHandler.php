@@ -2,6 +2,7 @@
 
 namespace App\Security;
 
+use App\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -16,13 +17,14 @@ class LoginSuccessHandler implements AuthenticationSuccessHandlerInterface
     public function onAuthenticationSuccess(Request $request, TokenInterface $token): Response
     {
         $response = $this->authenticationSuccessHandler->onAuthenticationSuccess($request, $token);
-        $email = $token->getUser()->getUserIdentifier();
-        return $this->changeResponse($response, $email);
+        $user = $token->getUser();
+        $fullName = $user instanceof User ? $user->getFullName() : "";
+        return $this->changeResponse($response, $fullName);
     }
 
-    private function changeResponse(Response $response, string $email): Response {
+    private function changeResponse(Response $response, string $fullName): Response {
         $data = json_decode($response->getContent(), true);
-        $data['email'] = $email;
+        $data['fullName'] = $fullName;
         $response->setContent(json_encode($data));
         return $response;
     }

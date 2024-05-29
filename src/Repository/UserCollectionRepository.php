@@ -12,8 +12,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class UserCollectionRepository extends ServiceEntityRepository
 {
-    private const SELECT_COLLECTION = 'c.id, c.name, c.description, c.imageUrl, ct.name as categoryName,
-            cf.name as fieldName, cf.type AS fieldType, cf.isRequired AS fieldRequired, cf.showInTable';
+    private const SELECT_COLLECTION = 'c.id, c.name, c.description, c.imageUrl, ct.name AS categoryName,
+            cf.name AS fieldName, cf.type AS fieldType, cf.isRequired AS fieldRequired, cf.showInTable';
 
     public function __construct(ManagerRegistry $registry)
     {
@@ -37,10 +37,20 @@ class UserCollectionRepository extends ServiceEntityRepository
             ->setParameter('id', $collectionId)->getQuery()->getResult();
     }
 
+    public function getLargestCollections(): array
+    {
+        return $this->createQueryBuilder('c')
+            ->select('c.id, c.name, COUNT(i.id) AS itemCount')
+            ->leftJoin('c.items', 'i')
+            ->groupBy('c.id')
+            ->orderBy('itemCount', 'DESC')
+            ->setMaxResults(5)->getQuery()->getResult();
+    }
+
     public function getCollectionBasic(int $collectionId): array
     {
         return $this->createQueryBuilder('c')
-            ->select('c.id, c.name, c.description, c.imageUrl, ct.name as categoryName')
+            ->select('c.id, c.name, c.description, c.imageUrl, ct.name AS categoryName')
             ->leftJoin('c.category', 'ct')
             ->where('c.id = :id')
             ->setParameter('id', $collectionId)->getQuery()->getResult();

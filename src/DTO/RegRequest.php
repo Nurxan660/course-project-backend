@@ -10,6 +10,7 @@ class RegRequest
     #[Assert\NotBlank]
     #[Assert\Email]
     private string $email;
+    private string $fullName;
     #[Assert\NotBlank]
     private string $password;
 
@@ -19,6 +20,7 @@ class RegRequest
         $data = json_decode($content, true);
         $this->email = $data['email'];
         $this->password = $data['password'];
+        $this->fullName = $data['fullName'];
     }
 
     public function getEmail(): string
@@ -39,5 +41,10 @@ class RegRequest
     public function setPassword(string $password): void
     {
         $this->password = $password;
+    }
+
+    public function getFullName(): string
+    {
+        return $this->fullName;
     }
 }

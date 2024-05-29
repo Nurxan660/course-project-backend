@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\DTO\RegRequest;
+use App\Exception\UserNotFoundException;
 use App\Service\AuthService;
 use App\Service\RefreshTokenService;
 use Gesdinet\JWTRefreshTokenBundle\Generator\RefreshTokenGeneratorInterface;
@@ -23,12 +24,15 @@ class AuthController extends AbstractController
     {
     }
 
+    /**
+     * @throws UserNotFoundException
+     */
     #[Route(path: "/register", name: 'register', methods: ['POST'])]
     public function register(RequestStack $requestStack): JsonResponse {
         $req = new RegRequest($requestStack);
         $errors = $this->validator->validate($req);
         if (count($errors) > 0) return new JsonResponse(['error' => (string)$errors], 400);
-        $res = $this->authService->handleRegister($req->getEmail(), $req->getPassword());
+        $res = $this->authService->handleRegister($req->getEmail(), $req->getPassword(), $req->getFullName());
         return new JsonResponse($res);
     }
 }

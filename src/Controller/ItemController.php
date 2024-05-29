@@ -38,26 +38,6 @@ class ItemController extends AbstractController
         return new JsonResponse(["message" => $res], Response::HTTP_OK);
     }
 
-    #[Route('/get/items', name: 'get_items', methods: ['GET'])]
-    public function getCollectionWithItems(Request $request): JsonResponse {
-        $collectionId = $request->query->getInt("collectionId");
-        $page = $request->query->getInt("page");
-        $res = $this->itemService->getCollectionWithItems($collectionId, $page);
-        $jsonRes = $this->serializer->serialize($res, 'json');
-        return new JsonResponse($jsonRes, Response::HTTP_OK, [], true);
-    }
-
-    /**
-     * @throws ItemNotFoundException
-     */
-    #[Route('/get/item', name: 'get_item_with_likes', methods: ['GET'])]
-    public function getItemWithLikes(Request $request): JsonResponse {
-        $itemId = $request->query->getInt("itemId");
-        $res = $this->itemService->getItemWithLikes($itemId);
-        $jsonRes = $this->serializer->serialize($res, 'json');
-        return new JsonResponse($jsonRes, Response::HTTP_OK, [], true);
-    }
-
     #[Route('/delete', name: 'delete', methods: ['POST'])]
     public function deleteItemsByIds(Request $request): JsonResponse
     {
