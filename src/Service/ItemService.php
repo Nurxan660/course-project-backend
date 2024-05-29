@@ -6,12 +6,13 @@ use App\DTO\DeleteItemReq;
 use App\DTO\ItemCreateReq;
 use App\DTO\ItemEditReq;
 use App\DTO\ItemListRes;
-use App\Entity\CustomField;
+use App\DTO\ItemWithLikesResponse;
 use App\Entity\Item;
 use App\Entity\ItemCustomField;
 use App\Entity\Tag;
 use App\Entity\UserCollection;
 use App\Exception\CollectionNotFoundException;
+use App\Exception\ItemNotFoundException;
 use App\Repository\CustomFieldRepository;
 use App\Repository\ItemRepository;
 use App\Repository\UserCollectionRepository;
@@ -111,5 +112,25 @@ class ItemService
         $item->setName($data->getName());
         $this->tagService->updateTags($item, $data->getTags());
         return $this->translator->trans('collection_edit_response', [], 'api_success');
+    }
+
+    /**
+     * @throws ItemNotFoundException
+     */
+    public function findById(int $itemId): Item
+    {
+        $item = $this->itemRepository->find($itemId);
+        if(!$item) throw new ItemNotFoundException();
+        return $item;
+    }
+
+    /**
+     * @throws ItemNotFoundException
+     */
+    public function getItemWithLikes(int $itemId): ItemWithLikesResponse
+    {
+        $res = $this->itemRepository->getItemWithLikes($itemId);
+        if(!$res) throw new ItemNotFoundException();
+        return $this->itemMapper->mapToItemWithLikesDto($res);
     }
 }

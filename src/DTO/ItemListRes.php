@@ -8,7 +8,7 @@ class ItemListRes
     private array $items = [];
     private int $totalPages;
 
-    public function addCustomFieldName(?string $name, bool $show): void
+    public function addCustomFieldName(?string $name, ?bool $show): void
     {
         if ($show && $name && !in_array($name, $this->customFieldNames)) {
             $this->customFieldNames[] = $name;

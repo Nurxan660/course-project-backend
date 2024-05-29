@@ -23,11 +23,13 @@ class Item
     private UserCollection $collection;
 
     #[ORM\OneToMany(targetEntity: ItemCustomField::class, mappedBy: 'item', cascade: ['persist', 'remove'])]
-
     private Collection $itemCustomFields;
 
     #[ORM\ManyToMany(targetEntity: "Tag", cascade: ['persist', 'remove'])]
     private Collection $tags;
+
+    #[ORM\OneToMany(targetEntity: Like::class, mappedBy: 'item', cascade: ['remove'])]
+    private Collection $likes;
 
     public function __construct(string $name, UserCollection $userCollection)
     {
@@ -35,6 +37,7 @@ class Item
         $this->collection = $userCollection;
         $this->itemCustomFields = new ArrayCollection();
         $this->tags = new ArrayCollection();
+        $this->likes = new ArrayCollection();
     }
 
     public function addItemCustomField(ItemCustomField $itemCustomField): void {
@@ -90,5 +93,10 @@ class Item
     public function getTags(): Collection
     {
         return $this->tags;
+    }
+
+    public function getLikes(): Collection
+    {
+        return $this->likes;
     }
 }

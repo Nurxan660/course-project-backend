@@ -61,4 +61,15 @@ class ItemRepository extends ServiceEntityRepository
             ->where('i.id = :id')
             ->setParameter('id', $itemId)->getQuery()->getOneOrNullResult();
     }
+
+    public function getItemWithLikes(int $itemId): ?Item
+    {
+        return $this->createQueryBuilder('i')
+            ->select('i, icf, cf, l')
+            ->leftJoin('i.likes', 'l')
+            ->leftJoin('i.itemCustomFields', 'icf')
+            ->leftJoin('icf.customField', 'cf')
+            ->where('i.id = :id')
+            ->setParameter('id', $itemId)->getQuery()->getOneOrNullResult();
+    }
 }

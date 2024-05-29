@@ -13,7 +13,7 @@ use Doctrine\Persistence\ManagerRegistry;
 class UserCollectionRepository extends ServiceEntityRepository
 {
     private const SELECT_COLLECTION = 'c.id, c.name, c.description, c.imageUrl, ct.name as categoryName,
-            cf.name as fieldName, cf.type AS fieldType, cf.isRequired AS fieldRequired';
+            cf.name as fieldName, cf.type AS fieldType, cf.isRequired AS fieldRequired, cf.showInTable';
 
     public function __construct(ManagerRegistry $registry)
     {

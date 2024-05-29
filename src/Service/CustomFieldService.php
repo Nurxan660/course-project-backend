@@ -54,12 +54,46 @@ class CustomFieldService
 
     public function updateCustomFieldValues(Item $item, array $customFields): void
     {
+        $existingFields = $this->indexExistingFields($item);
+        $this->updateExistingFields($existingFields, $customFields);
+        $this->addNewCustomFields($item, $existingFields, $customFields);
+    }
+
+    private function indexExistingFields(Item $item): array
+    {
+        $indexedFields = [];
         foreach ($item->getItemCustomFields() as $field) {
-            if (!$field instanceof ItemCustomField) break;
-            $fieldName = $field->getCustomField()->getName();
-            if(isset($customFields[$fieldName]) && $field->getValue() !== $customFields[$fieldName])
-                $field->setValue($customFields[$fieldName]);
+            if (!$field instanceof ItemCustomField) continue;
+            $indexedFields[$field->getCustomField()->getName()] = $field;
         }
+        return $indexedFields;
+    }
+
+    private function updateExistingFields(array $existingFields, array $customFields): void
+    {
+        foreach ($existingFields as $fieldName => $field) {
+            if (isset($customFields[$fieldName]) && $field->getValue() !== $customFields[$fieldName]) {
+                $field->setValue($customFields[$fieldName]);
+            }
+        }
+    }
+
+    private function addNewCustomFields(Item $item, array $existingFields, array $customFields): void
+    {
+        foreach ($customFields as $fieldName => $value) {
+            if (!isset($existingFields[$fieldName])) {
+                $this->createAndAddNewField($item, $fieldName, $value);
+            }
+        }
+    }
+
+    private function createAndAddNewField(Item $item, string $fieldName, $value): void
+    {
+        $customField = $this->customFieldRepository->findOneBy(['name' => $fieldName]);
+        $newField = new ItemCustomField($customField, $value);
+        $newField->setItem($item);
+        $this->entityManager->persist($newField);
+        $item->addItemCustomField($newField);
     }
 
     private function mapCurrentFields(UserCollection $currentFields): array

@@ -5,6 +5,8 @@ namespace App\Service;
 use App\DTO\RegResponse;
 use App\Entity\User;
 use App\Enum\Role;
+use App\Exception\UserNotFoundException;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -14,7 +16,8 @@ class AuthService
     public function __construct(private UserPasswordHasherInterface $passwordHasher,
                                 private EntityManagerInterface $entityManager,
                                 private JWTTokenManagerInterface $tokenManager,
-                                private RefreshTokenService  $refreshTokenService)
+                                private RefreshTokenService  $refreshTokenService,
+                                private UserRepository $userRepository,)
     {
     }
 
@@ -24,6 +27,10 @@ class AuthService
         $this->saveUser($user);
         return $this->createToken($user);
     }
+
+    /**
+     * @throws UserNotFoundException
+     */
 
     private function setUser(string $email, string $password): User
     {

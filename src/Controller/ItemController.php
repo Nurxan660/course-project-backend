@@ -6,6 +6,7 @@ use App\DTO\DeleteItemReq;
 use App\DTO\ItemCreateReq;
 use App\DTO\ItemEditReq;
 use App\Exception\CollectionNotFoundException;
+use App\Exception\ItemNotFoundException;
 use App\Exception\ValidationException;
 use App\Service\ItemService;
 use App\Service\ValidatorService;
@@ -42,6 +43,17 @@ class ItemController extends AbstractController
         $collectionId = $request->query->getInt("collectionId");
         $page = $request->query->getInt("page");
         $res = $this->itemService->getCollectionWithItems($collectionId, $page);
+        $jsonRes = $this->serializer->serialize($res, 'json');
+        return new JsonResponse($jsonRes, Response::HTTP_OK, [], true);
+    }
+
+    /**
+     * @throws ItemNotFoundException
+     */
+    #[Route('/get/item', name: 'get_item_with_likes', methods: ['GET'])]
+    public function getItemWithLikes(Request $request): JsonResponse {
+        $itemId = $request->query->getInt("itemId");
+        $res = $this->itemService->getItemWithLikes($itemId);
         $jsonRes = $this->serializer->serialize($res, 'json');
         return new JsonResponse($jsonRes, Response::HTTP_OK, [], true);
     }
