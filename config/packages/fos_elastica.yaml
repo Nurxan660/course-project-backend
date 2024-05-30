@@ -1,8 +1,6 @@
 fos_elastica:
   clients:
-    default:
-      host: '%env(ELASTICSEARCH_HOST)%'
-      port: 443
+    default: { url: '%env(ELASTICSEARCH_URL)%' }
   indexes:
     items:
       properties:
