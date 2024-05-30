@@ -1,8 +1,7 @@
 fos_elastica:
   clients:
     default:
-      host: heroku:4b4dfd4295ede7701a26a58588ce5e18@oin-us-east-1.searchly.com
-      port: 443
+      url: '%env(resolve:SEARCHBOX_URL)%'
   indexes:
     items:
       properties:
