@@ -2,7 +2,7 @@
 
 namespace App\Validator\ConstraintsValidator;
 
-use App\DTO\ItemCreateReq;
+use App\DTO\ItemDTO\ItemCreateReq;
 use App\Entity\CustomField;
 use App\Service\CustomFieldService;
 use App\Validator\Constraints\IsCustomFieldsRequired;

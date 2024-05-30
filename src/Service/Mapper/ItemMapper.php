@@ -2,11 +2,11 @@
 
 namespace App\Service\Mapper;
 
-use App\DTO\ItemListRes;
-use App\DTO\ItemWithLikesResponse;
+use App\DTO\ItemDTO\ItemListRes;
+use App\DTO\ItemDTO\ItemWithLikesResponse;
+use App\DTO\ItemDTO\SearchItemResponse;
 use App\DTO\Pojo\CustomFieldItemWithLikes;
 use App\DTO\Pojo\Item;
-use App\DTO\SearchItemResponse;
 use App\Entity\ItemCustomField;
 use Elastica\Result;
 

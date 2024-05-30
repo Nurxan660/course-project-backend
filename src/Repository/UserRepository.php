@@ -16,28 +16,21 @@ class UserRepository extends ServiceEntityRepository
         parent::__construct($registry, User::class);
     }
 
-//    /**
-//     * @return User[] Returns an array of User objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('u')
-//            ->andWhere('u.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('u.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function findAllUsers(): \Doctrine\ORM\Query
+    {
+        return $this->createQueryBuilder('u')
+            ->select('u.id, u.email, u.fullName, u.registerDate, u.role')
+            ->orderBy('u.id', 'ASC')
+            ->getQuery();
+    }
 
-//    public function findOneBySomeField($value): ?User
-//    {
-//        return $this->createQueryBuilder('u')
-//            ->andWhere('u.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function changeUserLockedStatus(array $ids, bool $status)
+    {
+        return $this->createQueryBuilder('u')
+            ->update()
+            ->set('u.isBlocked', ':status')
+            ->where('u.id IN (:ids)')
+            ->setParameter('ids', $ids)->setParameter('status', $status)
+            ->getQuery()->execute();
+    }
 }

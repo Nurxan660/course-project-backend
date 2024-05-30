@@ -1,8 +1,6 @@
 <?php
 
-namespace App\DTO;
-
-use App\Entity\CollectionCategory;
+namespace App\DTO\CollectionDTO;
 
 class CollectionRes
 {

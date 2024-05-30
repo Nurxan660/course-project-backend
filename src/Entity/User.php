@@ -24,6 +24,9 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     #[ORM\Column(length: 255)]
     private string $fullName;
 
+    #[ORM\Column(type: 'boolean')]
+    private bool $isBlocked = false;
+
     #[ORM\Column(type: 'datetime')]
     private \DateTimeInterface $registerDate;
 
@@ -98,5 +101,10 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     public function getRole(): Role
     {
         return $this->role;
+    }
+
+    public function isBlocked(): bool
+    {
+        return $this->isBlocked;
     }
 }

@@ -1,6 +1,8 @@
 <?php
 
-namespace App\DTO;
+namespace App\DTO\CollectionDTO;
+
+use App\DTO\CustomField;
 
 class CollectionEditRes
 {

@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: LikeRepository::class)]
 #[ORM\Table(name: '`like`')]
+#[ORM\Index(name: 'user_item_idx', columns: ['user_id', 'item_id'])]
 class Like
 {
     #[ORM\Id]

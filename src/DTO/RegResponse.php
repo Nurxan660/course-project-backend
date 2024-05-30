@@ -7,12 +7,14 @@ class RegResponse implements \JsonSerializable
     private string $token;
     private string $refreshToken;
     private string $fullName;
+    private string $role;
 
-    public function __construct(string $token, string $refreshToken, string $fullName)
+    public function __construct(string $token, string $refreshToken, string $fullName, string $role)
     {
         $this->token = $token;
         $this->refreshToken = $refreshToken;
         $this->fullName = $fullName;
+        $this->role = $role;
     }
 
     public function getToken(): string
@@ -35,7 +37,13 @@ class RegResponse implements \JsonSerializable
         return [
             'token' => $this->getToken(),
             'refreshToken' => $this->getRefreshToken(),
-            'fullName' => $this->getFullName()
+            'fullName' => $this->getFullName(),
+            'role' => $this->getRole()
         ];
+    }
+
+    public function getRole(): string
+    {
+        return $this->role;
     }
 }

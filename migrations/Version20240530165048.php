@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20240530051436 extends AbstractMigration
+final class Version20240530165048 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -32,11 +32,13 @@ final class Version20240530051436 extends AbstractMigration
         $this->addSql('CREATE SEQUENCE user_collection_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
         $this->addSql('CREATE TABLE collection_category (id INT NOT NULL, name VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_F7CCD7F15E237E06 ON collection_category (name)');
+        $this->addSql('CREATE INDEX name_idx ON collection_category (name)');
         $this->addSql('CREATE TABLE comment (id INT NOT NULL, user_id INT DEFAULT NULL, item_id INT DEFAULT NULL, content VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_9474526CA76ED395 ON comment (user_id)');
         $this->addSql('CREATE INDEX IDX_9474526C126F525E ON comment (item_id)');
         $this->addSql('CREATE TABLE custom_field (id INT NOT NULL, collection_id INT DEFAULT NULL, name VARCHAR(255) NOT NULL, type VARCHAR(255) NOT NULL, is_required BOOLEAN NOT NULL, show_in_table BOOLEAN NOT NULL, PRIMARY KEY(id))');
-        $this->addSql('CREATE INDEX IDX_98F8BD31514956FD ON custom_field (collection_id)');
+        $this->addSql('CREATE INDEX field_name_idx ON custom_field (name)');
+        $this->addSql('CREATE INDEX collection_idx ON custom_field (collection_id)');
         $this->addSql('CREATE UNIQUE INDEX unique_name_collection ON custom_field (name, collection_id)');
         $this->addSql('CREATE TABLE item (id INT NOT NULL, collection_id INT DEFAULT NULL, name VARCHAR(255) NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_1F1B251E514956FD ON item (collection_id)');
@@ -50,10 +52,12 @@ final class Version20240530051436 extends AbstractMigration
         $this->addSql('CREATE TABLE "like" (id INT NOT NULL, user_id INT DEFAULT NULL, item_id INT DEFAULT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_AC6340B3A76ED395 ON "like" (user_id)');
         $this->addSql('CREATE INDEX IDX_AC6340B3126F525E ON "like" (item_id)');
+        $this->addSql('CREATE INDEX user_item_idx ON "like" (user_id, item_id)');
         $this->addSql('CREATE TABLE refresh_token (id INT NOT NULL, refresh_token VARCHAR(128) NOT NULL, username VARCHAR(255) NOT NULL, valid TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_C74F2195C74F2195 ON refresh_token (refresh_token)');
         $this->addSql('CREATE TABLE tag (id INT NOT NULL, name VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
-        $this->addSql('CREATE TABLE "user" (id INT NOT NULL, email VARCHAR(255) NOT NULL, full_name VARCHAR(255) NOT NULL, register_date TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, password VARCHAR(255) NOT NULL, role VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE INDEX tag_name_idx ON tag (name)');
+        $this->addSql('CREATE TABLE "user" (id INT NOT NULL, email VARCHAR(255) NOT NULL, full_name VARCHAR(255) NOT NULL, is_blocked BOOLEAN NOT NULL, register_date TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, password VARCHAR(255) NOT NULL, role VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_8D93D649E7927C74 ON "user" (email)');
         $this->addSql('CREATE INDEX email_idx ON "user" (email)');
         $this->addSql('CREATE TABLE user_collection (id INT NOT NULL, category_id INT DEFAULT NULL, user_id INT DEFAULT NULL, name VARCHAR(255) NOT NULL, description TEXT NOT NULL, image_url VARCHAR(255) DEFAULT NULL, PRIMARY KEY(id))');

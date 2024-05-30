@@ -8,6 +8,8 @@ use Symfony\Component\Serializer\Annotation\Ignore;
 
 #[ORM\Entity(repositoryClass: CustomFieldRepository::class)]
 #[ORM\UniqueConstraint(name: "unique_name_collection", columns: ["name", "collection_id"])]
+#[ORM\Index(name: 'field_name_idx', columns: ['name'])]
+#[ORM\Index(name: 'collection_idx', columns: ['collection_id'])]
 class CustomField
 {
     #[ORM\Id]

@@ -2,9 +2,9 @@
 
 namespace App\Service\Mapper;
 
-use App\DTO\CollectionEditRes;
-use App\DTO\CollectionPaginationRes;
-use App\DTO\CollectionRes;
+use App\DTO\CollectionDTO\CollectionEditRes;
+use App\DTO\CollectionDTO\CollectionPaginationRes;
+use App\DTO\CollectionDTO\CollectionRes;
 use App\DTO\CustomField;
 use App\Entity\UserCollection;
 use App\Enum\PaginationLimit;
@@ -49,7 +49,7 @@ class CollectionMapper
     {
         $paginationResponse = new CollectionPaginationRes();
         $paginationResponse->setTotalPages($totalPages);
-        $paginationResponse->setLimit(PaginationLimit::COLLECTION->value);
+        $paginationResponse->setLimit(PaginationLimit::DEFAULT->value);
         $paginationResponse->setCollections($collections);
         return $paginationResponse;
     }

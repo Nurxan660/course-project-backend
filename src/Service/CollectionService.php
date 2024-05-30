@@ -2,10 +2,10 @@
 
 namespace App\Service;
 
-use App\DTO\CollectionDataReq;
-use App\DTO\CollectionEditRes;
-use App\DTO\CollectionPaginationRes;
-use App\DTO\CollectionRes;
+use App\DTO\CollectionDTO\CollectionDataReq;
+use App\DTO\CollectionDTO\CollectionEditRes;
+use App\DTO\CollectionDTO\CollectionPaginationRes;
+use App\DTO\CollectionDTO\CollectionRes;
 use App\Entity\CollectionCategory;
 use App\Entity\UserCollection;
 use App\Enum\PaginationLimit;
@@ -62,7 +62,7 @@ class CollectionService
     {
         $user = $this->security->getUser();
         $query = $this->collectionRepository->getCollectionsByUser($user);
-        $pagination = $this->paginator->paginate($query, $page, PaginationLimit::COLLECTION->value);
+        $pagination = $this->paginator->paginate($query, $page, PaginationLimit::DEFAULT->value);
         $collections = array_map([$this->collectionMapper, 'mapToCollection'], $pagination->getItems());
         return $this->collectionMapper->mapToPaginationRes($collections, $pagination->getTotalItemCount());
     }

@@ -3,10 +3,9 @@
 namespace App\Controller;
 
 use App\DTO\DeleteItemReq;
-use App\DTO\ItemCreateReq;
-use App\DTO\ItemEditReq;
+use App\DTO\ItemDTO\ItemCreateReq;
+use App\DTO\ItemDTO\ItemEditReq;
 use App\Exception\CollectionNotFoundException;
-use App\Exception\ItemNotFoundException;
 use App\Exception\ValidationException;
 use App\Service\ItemService;
 use App\Service\ValidatorService;

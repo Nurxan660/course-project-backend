@@ -53,6 +53,6 @@ class AuthService
     {
         $jwt = $this->tokenManager->create($user);
         $refreshToken = $this->refreshTokenService->createRefreshToken($user);
-        return new RegResponse($jwt, $refreshToken, $user->getFullName());
+        return new RegResponse($jwt, $refreshToken, $user->getFullName(), $user->getRole()->value);
     }
 }

@@ -5,6 +5,8 @@
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
 
+
+
 services:
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
@@ -23,6 +25,9 @@ services:
         tags:
             - { name: kernel.event_subscriber }
     App\EventSubscriber\ExceptionSubscriber:
+        arguments:
+            $exceptionUtils: '@App\Utils\ExceptionUtils'
+            $handlers: !tagged_iterator app.exception_handler
         tags:
             - { name: kernel.event_subscriber }
     App\Security\LoginSuccessHandler:
@@ -30,4 +35,26 @@ services:
     App\Service\SearchService:
         arguments:
             $finder: '@fos_elastica.finder.items'
+    App\Exception\ExceptionHandler\UniqueConstraintViolationHandler:
+        tags:
+            - { name: app.exception_handler }
+    App\Exception\ExceptionHandler\CategoryNotFoundHandler:
+        tags:
+            - { name: app.exception_handler }
+    App\Exception\ExceptionHandler\CollectionNotFoundHandler:
+        tags:
+            - { name: app.exception_handler }
+    App\Exception\ExceptionHandler\ItemNotFoundHandler:
+        tags:
+            - { name: app.exception_handler }
+    App\Exception\ExceptionHandler\UserBlockedHandler:
+        tags:
+            - { name: app.exception_handler }
+    App\Exception\ExceptionHandler\UserNotFoundHandler:
+        tags:
+            - { name: app.exception_handler }
+    App\Exception\ExceptionHandler\ValidationExceptionHandler:
+        tags:
+            - { name: app.exception_handler }
+
 

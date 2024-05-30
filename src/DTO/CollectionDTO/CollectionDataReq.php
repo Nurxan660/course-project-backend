@@ -1,6 +1,6 @@
 <?php
 
-namespace App\DTO;
+namespace App\DTO\CollectionDTO;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class CollectionDataReq

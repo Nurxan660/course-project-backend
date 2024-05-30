@@ -3,10 +3,10 @@
 namespace App\Service;
 
 use App\DTO\DeleteItemReq;
-use App\DTO\ItemCreateReq;
-use App\DTO\ItemEditReq;
-use App\DTO\ItemListRes;
-use App\DTO\ItemWithLikesResponse;
+use App\DTO\ItemDTO\ItemCreateReq;
+use App\DTO\ItemDTO\ItemEditReq;
+use App\DTO\ItemDTO\ItemListRes;
+use App\DTO\ItemDTO\ItemWithLikesResponse;
 use App\Entity\Item;
 use App\Entity\ItemCustomField;
 use App\Entity\Tag;
