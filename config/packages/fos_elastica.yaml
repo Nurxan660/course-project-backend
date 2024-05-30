@@ -1,7 +1,7 @@
 fos_elastica:
   clients:
     default:
-      url: '%env(resolve:SEARCHBOX_URL)%'
+      url: '%env(SEARCHBOX_URL)%'
   indexes:
     items:
       properties:
