@@ -123,4 +123,9 @@ class UserCollection
     {
         $this->user = $user;
     }
+
+    public function getItems(): Collection
+    {
+        return $this->items;
+    }
 }

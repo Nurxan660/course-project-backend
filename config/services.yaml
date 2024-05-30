@@ -27,4 +27,7 @@ services:
             - { name: kernel.event_subscriber }
     App\Security\LoginSuccessHandler:
         arguments: [ '@lexik_jwt_authentication.handler.authentication_success' ]
+    App\Service\SearchService:
+        arguments:
+            $finder: '@fos_elastica.finder.items'
 

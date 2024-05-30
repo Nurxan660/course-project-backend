@@ -6,6 +6,7 @@ use App\Repository\ItemRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ItemRepository::class)]
 #[ORM\UniqueConstraint(name: "unique_item_name_collection", columns: ["name", "collection_id"])]
@@ -102,5 +103,10 @@ class Item
     public function getLikes(): Collection
     {
         return $this->likes;
+    }
+
+    public function getCollection(): UserCollection
+    {
+        return $this->collection;
     }
 }

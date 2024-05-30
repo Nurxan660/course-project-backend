@@ -89,4 +89,14 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     {
         return $this->fullName;
     }
+
+    public function getRegisterDate(): \DateTimeInterface
+    {
+        return $this->registerDate;
+    }
+
+    public function getRole(): Role
+    {
+        return $this->role;
+    }
 }

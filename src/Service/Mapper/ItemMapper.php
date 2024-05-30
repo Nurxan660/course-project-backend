@@ -6,7 +6,9 @@ use App\DTO\ItemListRes;
 use App\DTO\ItemWithLikesResponse;
 use App\DTO\Pojo\CustomFieldItemWithLikes;
 use App\DTO\Pojo\Item;
+use App\DTO\SearchItemResponse;
 use App\Entity\ItemCustomField;
+use Elastica\Result;
 
 class ItemMapper
 {
@@ -50,6 +52,15 @@ class ItemMapper
             $items[$e['name']] = new Item($e['name'], $e['id']);
         }
         if($e['show']) $items[$e['name']]->addCustomField($e['value']);
+    }
+
+    public function mapToSearchItemResponseDto(array $results): array
+    {
+        return array_map(function (Result $result) {
+            $source = $result->getSource();
+            return new SearchItemResponse($source['id'],
+                $source['name'], $source['collection']['id'] ?? null);
+        }, $results);
     }
 
 }

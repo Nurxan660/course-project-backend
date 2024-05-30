@@ -1,0 +1,21 @@
+fos_elastica:
+  clients:
+    default:
+      url: '%env(BONSAI_URL)%'
+  indexes:
+    items:
+      properties:
+        id: ~
+        name: ~
+        tags: { type: "nested", properties: { name: ~ } }
+        collection:
+          type: "object"
+          properties:
+            id: ~
+            name: ~
+            description: ~
+      persistence:
+        driver: orm
+        model: App\Entity\Item
+        provider: ~
+        finder: ~

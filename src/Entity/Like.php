@@ -46,7 +46,7 @@ class Like
         $this->user = $user;
     }
 
-    public function getItem(): User
+    public function getItem(): Item
     {
         return $this->item;
     }
