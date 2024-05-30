@@ -1,10 +1,8 @@
 fos_elastica:
   clients:
     default:
-      host: ivy-849219168.us-east-1.bonsaisearch.net
+      host: heroku:4b4dfd4295ede7701a26a58588ce5e18@oin-us-east-1.searchly.com
       port: 443
-      username: 't6dufj6bh3'
-      password: 't4b28ryclf'
   indexes:
     items:
       properties:
