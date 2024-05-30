@@ -1,7 +1,10 @@
 fos_elastica:
   clients:
     default:
-      url: '%env(BONSAI_URL)%'
+      host: ivy-849219168.us-east-1.bonsaisearch.net
+      port: 443
+      username: 't6dufj6bh3'
+      password: 't4b28ryclf'
   indexes:
     items:
       properties:
