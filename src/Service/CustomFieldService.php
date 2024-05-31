@@ -81,7 +81,7 @@ class CustomFieldService
     private function addNewCustomFields(Item $item, array $existingFields, array $customFields): void
     {
         foreach ($customFields as $fieldName => $value) {
-            if (!isset($existingFields[$fieldName])) {
+            if (!isset($existingFields[$fieldName]) && $fieldName) {
                 $this->createAndAddNewField($item, $fieldName, $value);
             }
         }

@@ -16,6 +16,6 @@ class CustomFieldMapper
     private function processCustomFieldValue(array $cfv, array &$res, array &$tags): void {
         $res['name'] = $res['name'] ?? $cfv['itemName'];
         if(!in_array($cfv['tagName'], $tags)) $tags[] = $cfv['tagName'];
-        if(isset($res[$cfv['name']])) $res[$cfv['name']] = $cfv['value'];
+        $res[$cfv['name']] = $cfv['value'];
     }
 }

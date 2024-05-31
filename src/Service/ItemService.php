@@ -120,7 +120,7 @@ class ItemService
         $this->customFieldService->updateCustomFieldValues($item, $data->getCustomFields());
         $item->setName($data->getName());
         $this->tagService->updateTags($item, $data->getTags());
-        return $this->translator->trans('collection_edit_response', [], 'api_success');
+        return $this->translator->trans('item_edit_response', [], 'api_success');
     }
 
     /**

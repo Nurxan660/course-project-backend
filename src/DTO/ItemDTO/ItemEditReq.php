@@ -7,7 +7,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[IsCustomFieldsRequired]
 class ItemEditReq
 {
-    #[Assert\NotBlank]
     private array $customFields;
     #[Assert\NotBlank]
     private array $tags;
