@@ -63,7 +63,7 @@ class CustomFieldService
     {
         $indexedFields = [];
         foreach ($item->getItemCustomFields() as $field) {
-            if (!$field instanceof ItemCustomField) continue;
+            if (!$field instanceof ItemCustomField || !$field->getCustomField()) continue;
             $indexedFields[$field->getCustomField()->getName()] = $field;
         }
         return $indexedFields;

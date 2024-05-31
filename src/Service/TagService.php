@@ -5,12 +5,17 @@ namespace App\Service;
 use App\Entity\Item;
 use App\Entity\Tag;
 use App\Repository\TagRepository;
+use App\Service\Mapper\TagMapper;
 use Doctrine\ORM\EntityManagerInterface;
+use FOS\ElasticaBundle\Finder\TransformedFinder;
 
 class TagService
 {
     public function __construct(private TagRepository $tagRepository,
-                                private EntityManagerInterface $entityManager)
+                                private EntityManagerInterface $entityManager,
+                                private TransformedFinder $finder,
+                                private SearchService  $searchService,
+                                private TagMapper $tagMapper)
     {
     }
 
@@ -21,6 +26,12 @@ class TagService
         foreach ($tags as $tag)
             $tagsMap[$tag->getName()] = $tag;
         return $tagsMap;
+    }
+
+    public function searchTags(string $searchTerm): array {
+        $query = $this->searchService->getSearchQuery($searchTerm);
+        $results = $this->finder->findRaw($query);
+        return $this->tagMapper->mapToSearchTagResponseDto($results);
     }
 
     public function updateTags(Item $item, array $editedTags): void

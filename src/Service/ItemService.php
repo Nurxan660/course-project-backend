@@ -18,6 +18,7 @@ use App\Repository\ItemRepository;
 use App\Repository\UserCollectionRepository;
 use App\Service\Mapper\ItemMapper;
 use Doctrine\ORM\EntityManagerInterface;
+use FOS\ElasticaBundle\Finder\TransformedFinder;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -32,7 +33,9 @@ class ItemService
                                 private ItemMapper $itemMapper,
                                 private UserCollectionRepository $collectionRepository,
                                 private ItemRepository $itemRepository,
-                                private PaginatorInterface $paginator)
+                                private PaginatorInterface $paginator,
+                                private TransformedFinder $finder,
+                                private SearchService  $searchService)
     {
     }
 
@@ -45,6 +48,12 @@ class ItemService
         $item = $this->initializeItem($dto, $collection);
         $this->saveItem($item);
         return $this->translator->trans('item_create_response', [], 'api_success');
+    }
+
+    public function searchItems(string $searchTerm): array {
+        $query = $this->searchService->getSearchQuery($searchTerm);
+        $results = $this->finder->findRaw($query);
+        return $this->itemMapper->mapToSearchItemResponseDto($results);
     }
 
     private function initializeItem(ItemCreateReq $dto, UserCollection $collection): Item

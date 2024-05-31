@@ -33,7 +33,7 @@ class ItemMapper
     private function getItemWithLikesDtoCustomFields(array &$customFields, \App\Entity\Item $item): void
     {
         foreach ($item->getItemCustomFields() as $icf) {
-            if(!$icf instanceof ItemCustomField) break;
+            if(!$icf instanceof ItemCustomField || !$icf->getCustomField()) continue;
             $customFields[] = new CustomFieldItemWithLikes($icf->getCustomField()->getName(),
                 $icf->getValue(), $icf->getCustomField()->getType());
         }

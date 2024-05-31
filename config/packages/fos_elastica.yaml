@@ -1,20 +1,43 @@
 fos_elastica:
-  clients:
-    default: { host: '%env(ELASTICSEARCH_URL)%', port: 443 }
-  indexes:
-    items:
-      properties:
-        id: ~
-        name: ~
-        tags: { type: "nested", properties: { name: ~ } }
-        collection:
-          type: "object"
-          properties:
-            id: ~
-            name: ~
-            description: ~
-      persistence:
-        driver: orm
-        model: App\Entity\Item
-        provider: ~
-        finder: ~
+    clients:
+        default:
+            connections:
+                - host: '%env(ELASTIC_HOST)%'
+                  port: '443'
+                  transport: 'https'
+                  username: '%env(ELASTIC_USERNAME)%'
+                  password: '%env(ELASTIC_PASSWORD)%'
+                  curl:
+                      64: false  # CURLOPT_SSL_VERIFYPEER
+                      81: false  # CURLOPT_SSL_VERIFYHOST
+    indexes:
+        items:
+            properties:
+                id: ~
+                name: ~
+                tags:
+                    type: "nested"
+                    properties:
+                        name: ~
+                collection:
+                    type: "object"
+                    properties:
+                        id: ~
+                        name: ~
+                        description: ~
+            persistence:
+                driver: orm
+                model: App\Entity\Item
+                provider: ~
+                finder: ~
+                listener: ~
+        tags:
+            properties:
+                id: ~
+                name: ~
+            persistence:
+                driver: orm
+                model: App\Entity\Tag
+                provider: ~
+                finder: ~
+                listener: ~

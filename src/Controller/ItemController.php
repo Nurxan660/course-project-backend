@@ -8,6 +8,7 @@ use App\DTO\ItemDTO\ItemEditReq;
 use App\Exception\CollectionNotFoundException;
 use App\Exception\ValidationException;
 use App\Service\ItemService;
+use App\Service\TagService;
 use App\Service\ValidatorService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -21,7 +22,8 @@ class ItemController extends AbstractController
 {
     public function __construct(private ValidatorService $validatorService,
                                 private SerializerInterface $serializer,
-                                private ItemService  $itemService,)
+                                private ItemService  $itemService,
+                                private TagService $tagService,)
     {
     }
 
@@ -35,6 +37,15 @@ class ItemController extends AbstractController
         $this->validatorService->validate($itemDto);
         $res = $this->itemService->handleItemCreate($itemDto);
         return new JsonResponse(["message" => $res], Response::HTTP_OK);
+    }
+
+    #[Route('/search/tags', name: 'tags', methods: ['GET'])]
+    public function searchTags(Request $request): JsonResponse
+    {
+        $searchTerm = $request->query->get('term', '');
+        $res = $this->tagService->searchTags($searchTerm);
+        $resJson = $this->serializer->serialize($res, 'json');
+        return new JsonResponse($resJson, Response::HTTP_OK, [], true);
     }
 
     #[Route('/delete', name: 'delete', methods: ['POST'])]

@@ -32,9 +32,12 @@ services:
             - { name: kernel.event_subscriber }
     App\Security\LoginSuccessHandler:
         arguments: [ '@lexik_jwt_authentication.handler.authentication_success' ]
-    App\Service\SearchService:
+    App\Service\ItemService:
         arguments:
             $finder: '@fos_elastica.finder.items'
+    App\Service\TagService:
+        arguments:
+            $finder: '@fos_elastica.finder.tags'
     App\Exception\ExceptionHandler\UniqueConstraintViolationHandler:
         tags:
             - { name: app.exception_handler }
