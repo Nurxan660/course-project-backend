@@ -19,7 +19,7 @@ class UserRepository extends ServiceEntityRepository
     public function findAllUsers(): \Doctrine\ORM\Query
     {
         return $this->createQueryBuilder('u')
-            ->select('u.id, u.email, u.fullName, u.registerDate, u.role')
+            ->select('u.id, u.email, u.fullName, u.registerDate, u.role, u.isBlocked')
             ->orderBy('u.id', 'ASC')
             ->getQuery();
     }
@@ -31,6 +31,25 @@ class UserRepository extends ServiceEntityRepository
             ->set('u.isBlocked', ':status')
             ->where('u.id IN (:ids)')
             ->setParameter('ids', $ids)->setParameter('status', $status)
+            ->getQuery()->execute();
+    }
+
+    public function deleteUsers(array $ids)
+    {
+        return $this->createQueryBuilder('u')
+            ->delete()
+            ->where('u.id IN (:ids)')
+            ->setParameter('ids', $ids)
+            ->getQuery()->execute();
+    }
+
+    public function changeUserRole(array $ids, string $role)
+    {
+        return $this->createQueryBuilder('u')
+            ->update()
+            ->set('u.role', ':role')
+            ->where('u.id IN (:ids)')
+            ->setParameter('ids', $ids)->setParameter('role', $role)
             ->getQuery()->execute();
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\DTO;
 
-class DeleteItemReq
+class IdArrayReq
 {
     private array $ids;
 

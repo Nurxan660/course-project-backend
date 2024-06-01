@@ -6,6 +6,7 @@ use App\Exception\CategoryNotFoundException;
 use App\Exception\UserBlockedException;
 use App\Utils\ExceptionUtils;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 
 class UserBlockedHandler implements ExceptionHandlerInterface
@@ -15,7 +16,7 @@ class UserBlockedHandler implements ExceptionHandlerInterface
     {
         $exception = $event->getThrowable();
         if ($exception instanceof UserBlockedException) {
-            return $exceptionUtils->createResponseWithTranslator('user_blocked');
+            return $exceptionUtils->createResponseWithTranslator('user_blocked', Response::HTTP_LOCKED);
         }
         return null;
     }

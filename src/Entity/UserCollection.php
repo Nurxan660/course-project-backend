@@ -28,7 +28,8 @@ class UserCollection
     #[ORM\ManyToOne(targetEntity: CollectionCategory::class, fetch: 'EAGER')]
     private CollectionCategory $category;
 
-    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'collections')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private User $user;
 
     #[ORM\OneToMany(targetEntity: CustomField::class, mappedBy: 'collection', cascade: ['persist', 'remove'], fetch: 'EAGER')]
