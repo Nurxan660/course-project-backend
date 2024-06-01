@@ -3,6 +3,7 @@
 namespace App\Utils;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ExceptionUtils
@@ -11,12 +12,19 @@ class ExceptionUtils
     {
     }
 
-    public function createResponseWithTranslator(string $translationKey, array $translationParams = [], int $statusCode = 400): JsonResponse {
-        $message = $this->translator->trans($translationKey, $translationParams, 'api_errors');
-        return new JsonResponse(['error' => $message], $statusCode);
+    public function createResponseWithTranslator(string $translationKey, int $statusCode = 400): JsonResponse
+    {
+        $message = $this->getExceptionTranslation($translationKey);
+        return new JsonResponse(['message' => $message], $statusCode);
     }
 
-    public function createResponse(string $message, int $statusCode): JsonResponse {
-        return new JsonResponse(['error' => $message], $statusCode);
+    public function createResponse(string $message, int $statusCode): JsonResponse
+    {
+        return new JsonResponse(['message' => $message], $statusCode);
+    }
+
+    public function getExceptionTranslation(string $translationKey): string
+    {
+        return $this->translator->trans($translationKey, [], 'api_errors');
     }
 }

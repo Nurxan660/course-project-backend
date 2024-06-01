@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\DTO\IdArrayReq;
 use App\DTO\UserDTO\UserBlockRequest;
+use App\DTO\UserDTO\UserChangeRoleReq;
 use App\Service\AdminService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -11,7 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
-#[Route('/admin', name: 'admin_')]
+#[Route('/api/admin', name: 'admin_')]
 class AdminController extends AbstractController
 {
     public function __construct(private AdminService $adminService,
@@ -33,6 +35,22 @@ class AdminController extends AbstractController
     {
         $dto = $this->serializer->deserialize($request->getContent(), UserBlockRequest::class, 'json');
         $message = $this->adminService->changeUserLockedStatus($dto);
+        return new JsonResponse(['message' => $message]);
+    }
+
+    #[Route('/delete/users', name: 'delete_users', methods: ['POST'])]
+    public function deleteUsers(Request $request): JsonResponse
+    {
+        $ids = $this->serializer->deserialize($request->getContent(), IdArrayReq::class, 'json');
+        $message = $this->adminService->deleteUsers($ids);
+        return new JsonResponse(['message' => $message]);
+    }
+
+    #[Route('/change/role', name: 'change_role', methods: ['PUT'])]
+    public function changeUserRole(Request $request): JsonResponse
+    {
+        $dto = $this->serializer->deserialize($request->getContent(), UserChangeRoleReq::class, 'json');
+        $message = $this->adminService->changeRole($dto);
         return new JsonResponse(['message' => $message]);
     }
 }

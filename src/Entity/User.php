@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Enum\Role;
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -36,12 +38,16 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     #[ORM\Column(type: 'string', enumType: Role::class)]
     private Role $role;
 
+    #[ORM\OneToMany(targetEntity: UserCollection::class, mappedBy: 'collection', cascade: ['remove'])]
+    private Collection $collections;
+
     public function __construct(string $email, Role $role, string $fullName)
     {
         $this->email = $email;
         $this->role = $role;
         $this->fullName = $fullName;
         $this->registerDate = new \DateTimeImmutable();
+        $this->collections = new ArrayCollection();
     }
 
     public function getId(): ?int

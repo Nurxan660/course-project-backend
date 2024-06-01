@@ -24,6 +24,7 @@ class Item
     private \DateTimeInterface $createdAt;
 
     #[ORM\ManyToOne(targetEntity: UserCollection::class, inversedBy: "items")]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private UserCollection $collection;
 
     #[ORM\OneToMany(targetEntity: ItemCustomField::class, mappedBy: 'item', cascade: ['persist', 'remove'])]

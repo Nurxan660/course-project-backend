@@ -30,6 +30,7 @@ class CustomField
     private bool $showInTable = false;
 
     #[ORM\ManyToOne(targetEntity: UserCollection::class, inversedBy: "customFields")]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     #[Ignore]
     private UserCollection $collection;
 

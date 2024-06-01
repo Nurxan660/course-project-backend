@@ -7,4 +7,6 @@ item_edit_response: "Item successfully edited"
 like_created: "Like added"
 like_removed: "Like removed"
 user_blocked_response: "The blocking was successful"
+user_deleted_response: "The deleting was successful"
+user_role_changed_response: "The role change was successful"
 

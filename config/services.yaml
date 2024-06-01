@@ -21,6 +21,9 @@ services:
     App\Service\RefreshTokenService:
         arguments:
             $ttl: '%gesdinet_jwt_refresh_token.ttl%'
+    app.jwt_token_authenticator:
+        class: App\Security\CustomJWTAuthenticator
+        parent: lexik_jwt_authentication.security.guard.jwt_token_authenticator
     App\EventSubscriber\LocaleSubscriber:
         tags:
             - { name: kernel.event_subscriber }

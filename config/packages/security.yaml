@@ -22,17 +22,18 @@ security:
             pattern: ^/api
             stateless: true
             entry_point: jwt
-            jwt: ~
+            jwt:
+                authenticator: app.jwt_token_authenticator
             refresh_jwt:
                 check_path: /api/token/refresh
                 provider: app_user_provider
             logout:
                 path: api_token_invalidate
     access_control:
+        - { path: ^/api/admin, roles: ROLE_ADMIN }
         - { path: ^/api/(login|token/refresh), roles: PUBLIC_ACCESS }
         - { path: ^/api, roles: ROLE_USER }
         - { path: ^/open-api, roles: PUBLIC_ACCESS }
-        - { path: ^/admin, roles: ROLE_ADMIN }
 
 when@test:
     security:
