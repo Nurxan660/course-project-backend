@@ -25,6 +25,11 @@ fos_elastica:
                         id: ~
                         name: ~
                         description: ~
+                        user:
+                            type: "object"
+                            properties:
+                                id: ~
+                                fullName: ~
             persistence:
                 driver: orm
                 model: App\Entity\Item
