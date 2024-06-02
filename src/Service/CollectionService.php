@@ -8,6 +8,7 @@ use App\DTO\CollectionDTO\CollectionPaginationRes;
 use App\DTO\CollectionDTO\CollectionRes;
 use App\DTO\IdArrayReq;
 use App\Entity\CollectionCategory;
+use App\Entity\User;
 use App\Entity\UserCollection;
 use App\Enum\PaginationLimit;
 use App\Exception\CategoryNotFoundException;
@@ -18,6 +19,7 @@ use AutoMapperPlus\AutoMapper;
 use AutoMapperPlus\AutoMapperInterface;
 use AutoMapperPlus\AutoMapperPlusBundle\AutoMapperConfiguratorInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Elastica\Index;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -31,7 +33,9 @@ class CollectionService
                                 private Security $security,
                                 private UserCollectionRepository $collectionRepository,
                                 private PaginatorInterface $paginator,
-                                private CollectionMapper $collectionMapper)
+                                private CollectionMapper $collectionMapper,
+                                private SearchService $searchService,
+                                private Index $index)
     {
     }
 
@@ -76,8 +80,16 @@ class CollectionService
     public function deleteCollection(IdArrayReq $dto): string
     {
         $user = $this->security->getUser();
+        $this->deleteCollectionFromElastic($user, $dto);
         $this->collectionRepository->deleteByIds($dto->getIds(), $user);
         return $this->translator->trans('collection_delete_response', [], 'api_success');
+    }
+
+    public function deleteCollectionFromElastic(User $user, IdArrayReq $dto): void
+    {
+        $query = $this->searchService->buildBoolQueryForUserAndIds('collection.id',
+            'collection.user.id', $dto->getIds(), $user);
+        $this->index->deleteByQuery($query);
     }
 
     /**

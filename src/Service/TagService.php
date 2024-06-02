@@ -29,7 +29,7 @@ class TagService
     }
 
     public function searchTags(string $searchTerm): array {
-        $query = $this->searchService->getSearchQuery($searchTerm);
+        $query = $this->searchService->getSearchQuery($searchTerm, ['name']);
         $results = $this->finder->findRaw($query);
         return $this->tagMapper->mapToSearchTagResponseDto($results);
     }

@@ -8,6 +8,7 @@ use App\DTO\UserDTO\UserChangeRoleReq;
 use App\DTO\UserDTO\UserListResponse;
 use App\Enum\PaginationLimit;
 use App\Repository\UserRepository;
+use Elastica\Index;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -16,7 +17,8 @@ class AdminService
     public function __construct(private UserRepository $userRepository,
                                 private PaginatorInterface $paginator,
                                 private TranslatorInterface $translator,
-                                private SearchService $searchService,)
+                                private SearchService $searchService,
+                                private Index $index)
     {
     }
 
@@ -35,7 +37,8 @@ class AdminService
 
     public function deleteUsers(IdArrayReq $dto): string
     {
-        $this->searchService->deleteUsersFromElasticsearch($dto->getIds());
+        $query = $this->searchService->getDeleteQueryByUserId($dto->getIds());
+        $this->index->deleteByQuery($query);
         $this->userRepository->deleteUsers($dto->getIds());
         return $this->translator->trans('user_deleted_response', [], 'api_success');
     }
