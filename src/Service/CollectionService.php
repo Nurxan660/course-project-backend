@@ -6,6 +6,7 @@ use App\DTO\CollectionDTO\CollectionDataReq;
 use App\DTO\CollectionDTO\CollectionEditRes;
 use App\DTO\CollectionDTO\CollectionPaginationRes;
 use App\DTO\CollectionDTO\CollectionRes;
+use App\DTO\IdArrayReq;
 use App\Entity\CollectionCategory;
 use App\Entity\UserCollection;
 use App\Enum\PaginationLimit;
@@ -72,11 +73,10 @@ class CollectionService
         return $this->collectionRepository->getLargestCollections();
     }
 
-    public function deleteCollection(int $collectionId): string
+    public function deleteCollection(IdArrayReq $dto): string
     {
-        $collection = $this->collectionRepository->find($collectionId);
-        $this->entityManager->remove($collection);
-        $this->entityManager->flush();
+        $user = $this->security->getUser();
+        $this->collectionRepository->deleteByIds($dto->getIds(), $user);
         return $this->translator->trans('collection_delete_response', [], 'api_success');
     }
 

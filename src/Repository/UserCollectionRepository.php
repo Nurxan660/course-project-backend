@@ -55,4 +55,14 @@ class UserCollectionRepository extends ServiceEntityRepository
             ->where('c.id = :id')
             ->setParameter('id', $collectionId)->getQuery()->getResult();
     }
+
+    public function deleteByIds(array $ids, User $user): void
+    {
+        $qb = $this->createQueryBuilder('c');
+        $qb->delete()
+            ->where('c.id IN (:ids)')->andWhere('c.user = :user')
+            ->setParameter('ids', $ids)->setParameter('user', $user)
+            ->getQuery()
+            ->execute();
+    }
 }

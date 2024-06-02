@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\DTO\CollectionDTO\CollectionDataReq;
+use App\DTO\IdArrayReq;
 use App\Exception\CategoryNotFoundException;
 use App\Exception\CollectionNotFoundException;
 use App\Exception\ValidationException;
@@ -52,10 +53,10 @@ class CollectionController extends AbstractController
         return new JsonResponse($jsonRes, Response::HTTP_OK, [], true);
     }
 
-    #[Route('/delete', name: 'delete', methods: ['DELETE'])]
+    #[Route('/delete', name: 'delete', methods: ['POST'])]
     public function deleteCollection(Request $request): JsonResponse {
-        $collectionId = $request->query->getInt('collectionId');
-        $res = $this->collectionService->deleteCollection($collectionId);
+        $dto = $this->serializer->deserialize($request->getContent(), IdArrayReq::class, 'json');
+        $res = $this->collectionService->deleteCollection($dto);
         return new JsonResponse(["message" => $res], Response::HTTP_OK);
     }
 

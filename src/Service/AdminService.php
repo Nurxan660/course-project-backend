@@ -15,7 +15,8 @@ class AdminService
 {
     public function __construct(private UserRepository $userRepository,
                                 private PaginatorInterface $paginator,
-                                private TranslatorInterface $translator)
+                                private TranslatorInterface $translator,
+                                private SearchService $searchService,)
     {
     }
 
@@ -34,6 +35,7 @@ class AdminService
 
     public function deleteUsers(IdArrayReq $dto): string
     {
+        $this->searchService->deleteUsersFromElasticsearch($dto->getIds());
         $this->userRepository->deleteUsers($dto->getIds());
         return $this->translator->trans('user_deleted_response', [], 'api_success');
     }
