@@ -4,7 +4,8 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
-
+    search.item.fields: ['name', 'tags.name', 'content', 'collection.name', 'collection.description',
+    'collection.user.fullName']
 
 
 services:
@@ -24,23 +25,38 @@ services:
     app.jwt_token_authenticator:
         class: App\Security\CustomJWTAuthenticator
         parent: lexik_jwt_authentication.security.guard.jwt_token_authenticator
+
     App\EventSubscriber\LocaleSubscriber:
         tags:
             - { name: kernel.event_subscriber }
+
+    App\Security\LoginSuccessHandler:
+        arguments: [ '@lexik_jwt_authentication.handler.authentication_success' ]
+
+    App\Service\ItemService:
+        arguments:
+            $finder: '@fos_elastica.finder.items'
+            $index: '@fos_elastica.index.items'
+            $searchFields: '%search.item.fields%'
+
+    App\Service\TagService:
+        arguments:
+            $finder: '@fos_elastica.finder.tags'
+
+    App\Service\AdminService:
+        arguments:
+            $index: '@fos_elastica.index.items'
+
+    App\Service\CollectionService:
+        arguments:
+            $index: '@fos_elastica.index.items'
+
     App\EventSubscriber\ExceptionSubscriber:
         arguments:
             $exceptionUtils: '@App\Utils\ExceptionUtils'
             $handlers: !tagged_iterator app.exception_handler
         tags:
             - { name: kernel.event_subscriber }
-    App\Security\LoginSuccessHandler:
-        arguments: [ '@lexik_jwt_authentication.handler.authentication_success' ]
-    App\Service\ItemService:
-        arguments:
-            $finder: '@fos_elastica.finder.items'
-    App\Service\TagService:
-        arguments:
-            $finder: '@fos_elastica.finder.tags'
     App\Exception\ExceptionHandler\UniqueConstraintViolationHandler:
         tags:
             - { name: app.exception_handler }

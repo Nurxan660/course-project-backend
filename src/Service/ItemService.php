@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\DTO\DeleteItemReq;
+use App\DTO\IdArrayReq;
 use App\DTO\ItemDTO\ItemCreateReq;
 use App\DTO\ItemDTO\ItemEditReq;
 use App\DTO\ItemDTO\ItemListRes;
@@ -10,6 +11,7 @@ use App\DTO\ItemDTO\ItemWithLikesResponse;
 use App\Entity\Item;
 use App\Entity\ItemCustomField;
 use App\Entity\Tag;
+use App\Entity\User;
 use App\Entity\UserCollection;
 use App\Exception\CollectionNotFoundException;
 use App\Exception\ItemNotFoundException;
@@ -18,8 +20,10 @@ use App\Repository\ItemRepository;
 use App\Repository\UserCollectionRepository;
 use App\Service\Mapper\ItemMapper;
 use Doctrine\ORM\EntityManagerInterface;
+use Elastica\Index;
 use FOS\ElasticaBundle\Finder\TransformedFinder;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ItemService
@@ -35,7 +39,10 @@ class ItemService
                                 private ItemRepository $itemRepository,
                                 private PaginatorInterface $paginator,
                                 private TransformedFinder $finder,
-                                private SearchService  $searchService)
+                                private SearchService  $searchService,
+                                private Index $index,
+                                private Security $security,
+                                private array $searchFields)
     {
     }
 
@@ -51,7 +58,7 @@ class ItemService
     }
 
     public function searchItems(string $searchTerm): array {
-        $query = $this->searchService->getSearchQuery($searchTerm);
+        $query = $this->searchService->getSearchQuery($searchTerm, $this->searchFields);
         $results = $this->finder->findRaw($query);
         return $this->itemMapper->mapToSearchItemResponseDto($results);
     }
@@ -108,10 +115,19 @@ class ItemService
         return $resDto;
     }
 
-    public function deleteItems(DeleteItemReq $req): string
+    public function deleteItems(IdArrayReq $req): string
     {
+        $user = $this->security->getUser();
+        $this->deleteItemsFromElastic($req, $user);
         $this->itemRepository->deleteByIds($req->getIds());
         return $this->translator->trans('collection_delete_response', [], 'api_success');
+    }
+
+    public function deleteItemsFromElastic(IdArrayReq $req, User $user): void
+    {
+        $query = $this->searchService->buildBoolQueryForUserAndIds('id', 'collection.user.id',
+            $req->getIds(), $user);
+        $this->index->deleteByQuery($query);
     }
 
     public function handleItemEdit(int $itemId, ItemEditReq $data): string

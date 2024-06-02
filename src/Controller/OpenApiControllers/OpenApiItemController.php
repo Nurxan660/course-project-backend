@@ -45,4 +45,13 @@ class OpenApiItemController extends AbstractController
         $jsonRes = $this->serializer->serialize($res, 'json');
         return new JsonResponse($jsonRes, Response::HTTP_OK, [], true);
     }
+
+    #[Route('/search/items', name: 'search_items', methods: ['GET'])]
+    public function searchItems(Request $request): JsonResponse
+    {
+        $searchTerm = $request->query->get('term', '');
+        $res = $this->itemService->searchItems($searchTerm);
+        $resJson = $this->serializer->serialize($res, 'json');
+        return new JsonResponse($resJson, Response::HTTP_OK, [], true);
+    }
 }

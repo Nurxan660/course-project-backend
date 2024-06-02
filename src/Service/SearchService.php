@@ -2,40 +2,40 @@
 
 namespace App\Service;
 
-use App\Enum\PaginationLimit;
-use Elastica\Client;
+use App\Entity\User;
 use Elastica\Query;
+use Elastica\Query\BoolQuery;
+use Elastica\Query\QueryString;
+use Elastica\Query\Terms;
+use Elastica\Query\Term;
 
 class SearchService
 {
-    public function __construct(private Client $client)
+    public function __construct()
     {
     }
 
-    public function getSearchQuery(string $searchTerm): Query
+    public function getSearchQuery(string $searchTerm, array $searchFields): Query
     {
-        return new Query([
-            'query' => [
-                'query_string' => ['default_field' => '*', 'query' => $searchTerm . '*', 'default_operator' => 'AND']
-            ],
-            'size' => PaginationLimit::TAGS
-        ]);
+        $queryString = new QueryString();
+        $queryString->setFields($searchFields)
+            ->setQuery($searchTerm . '*')
+            ->setDefaultOperator('AND');
+        return new Query($queryString);
     }
 
-    public function getDeleteQueryByUserName(array $ids): array
+    public function getDeleteQueryByUserId(array $ids): Query
     {
-        return [
-            'query' => [
-                'terms' => [
-                    'collection.user.id' => $ids
-                ]
-            ]
-        ];
+        $termsQuery = new Terms('collection.user.id', $ids);
+        return new Query($termsQuery);
     }
-    public function deleteUsersFromElasticsearch(array $userIds): void
+
+    public function buildBoolQueryForUserAndIds(string $termsId, string $termId, array $ids, User $user): BoolQuery
     {
-        $index = $this->client->getIndex('items');
-        $deleteQuery = $this->getDeleteQueryByUserName($userIds);
-        $index->deleteByQuery($deleteQuery);
+        $boolQuery = new BoolQuery();
+        $boolQuery
+            ->addMust(new Terms($termsId, $ids))
+            ->addMust(new Term([$termId => $user->getId()]));
+        return $boolQuery;
     }
 }
