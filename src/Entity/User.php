@@ -41,6 +41,9 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     #[ORM\OneToMany(targetEntity: UserCollection::class, mappedBy: 'collection', cascade: ['remove'])]
     private Collection $collections;
 
+    #[ORM\OneToMany(targetEntity: Like::class, mappedBy: 'item', cascade: ['remove'])]
+    private Collection $likes;
+
     public function __construct(string $email, Role $role, string $fullName)
     {
         $this->email = $email;

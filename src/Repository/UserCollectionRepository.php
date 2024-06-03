@@ -56,6 +56,18 @@ class UserCollectionRepository extends ServiceEntityRepository
             ->setParameter('id', $collectionId)->getQuery()->getResult();
     }
 
+    public function findByIdAndUserId(int $collectionId, User $user): ?UserCollection
+    {
+        return $this->createQueryBuilder('c')
+            ->select('c, ct, cf, u')
+            ->leftJoin('c.category', 'ct')
+            ->leftJoin('c.customFields', 'cf')
+            ->leftJoin('c.user', 'u')
+            ->where('c.id = :id')->andWhere('u.id = :userId')
+            ->setParameter('id', $collectionId)->setParameter('userId', $user->getId())
+            ->getQuery()->getOneOrNullResult();
+    }
+
     public function deleteByIds(array $ids, User $user): void
     {
         $qb = $this->createQueryBuilder('c');

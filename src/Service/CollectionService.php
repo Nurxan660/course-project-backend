@@ -122,13 +122,19 @@ class CollectionService
         return $collection;
     }
 
+    public function getCollectionByIdAndUserId(int $collectionId, User $user): UserCollection {
+        $collection = $this->collectionRepository->findByIdAndUserId($collectionId, $this->security->getUser());
+        if(!$collection) throw new CollectionNotFoundException();
+        return $collection;
+    }
+
     /**
      * @throws CollectionNotFoundException
      * @throws CategoryNotFoundException
      */
     public function handleCollectionEdit(CollectionDataReq $req, int $collectionId): string
     {
-        $collection = $this->getCollectionById($collectionId);
+        $collection = $this->getCollectionByIdAndUserId($collectionId, $this->security->getUser());
         $category = $this->categoryService->getUpdatedCategory($req->getCategory(), $collection->getCategory());
         $updatedCollection = $this->changeCollection($collection, $req, $category);
         $this->customFieldService->updateCustomFields($updatedCollection, $req->getCustomFields());
