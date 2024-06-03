@@ -30,7 +30,7 @@ class Item
     #[ORM\OneToMany(targetEntity: ItemCustomField::class, mappedBy: 'item', cascade: ['persist', 'remove'])]
     private Collection $itemCustomFields;
 
-    #[ORM\ManyToMany(targetEntity: "Tag", cascade: ['persist', 'remove'])]
+    #[ORM\ManyToMany(targetEntity: "Tag", inversedBy: "items", cascade: ['persist', 'remove'])]
     private Collection $tags;
 
     #[ORM\OneToMany(targetEntity: Like::class, mappedBy: 'item', cascade: ['remove'])]

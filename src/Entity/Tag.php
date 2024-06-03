@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\TagRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TagRepository::class)]
@@ -16,6 +17,9 @@ class Tag
 
     #[ORM\Column(length: 255, unique: true)]
     private string $name;
+
+    #[ORM\ManyToMany(targetEntity: Item::class, mappedBy: 'tags', cascade: ['persist', 'remove'])]
+    private Collection $items;
 
     public function __construct(string $name)
     {
