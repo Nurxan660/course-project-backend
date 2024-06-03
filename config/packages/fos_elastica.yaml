@@ -1,15 +1,6 @@
 fos_elastica:
     clients:
-        default:
-            connections:
-                - host: '%env(ELASTIC_HOST)%'
-                  port: '443'
-                  transport: 'https'
-                  username: '%env(ELASTIC_USERNAME)%'
-                  password: '%env(ELASTIC_PASSWORD)%'
-                  curl:
-                      64: false  # CURLOPT_SSL_VERIFYPEER
-                      81: false  # CURLOPT_SSL_VERIFYHOST
+        default: { host: localhost, port: 9200 }
     indexes:
         items:
             properties:

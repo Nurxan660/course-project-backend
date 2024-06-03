@@ -28,6 +28,11 @@ class TagService
         return $tagsMap;
     }
 
+    public function getPopularTags(): array
+    {
+        return $this->tagRepository->getPopularTags();
+    }
+
     public function searchTags(string $searchTerm): array {
         $query = $this->searchService->getSearchQuery($searchTerm, ['name']);
         $results = $this->finder->findRaw($query);
