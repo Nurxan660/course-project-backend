@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\CustomFieldRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Ignore;
 
@@ -33,6 +34,9 @@ class CustomField
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     #[Ignore]
     private UserCollection $collection;
+
+    #[ORM\OneToMany(targetEntity: ItemCustomField::class, mappedBy: 'customField', cascade: ['remove'])]
+    private Collection $itemCustomFields;
 
     public function __construct(string $name, string $type, bool $isRequired, bool $showInTable)
     {
