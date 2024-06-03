@@ -1,5 +1,5 @@
 invalid_credentials: "Your email or password is incorrect. Please try again."
-email_already_exist: "The email provided is already in use"
+email_already_exist: "Already exist"
 category_not_found: "Category not found"
 collection_not_found: "Collection not found"
 user_not_found: "User not found"
