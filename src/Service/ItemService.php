@@ -17,6 +17,7 @@ use App\Exception\CollectionNotFoundException;
 use App\Exception\ItemNotFoundException;
 use App\Repository\CustomFieldRepository;
 use App\Repository\ItemRepository;
+use App\Repository\LikeRepository;
 use App\Repository\UserCollectionRepository;
 use App\Service\Mapper\ItemMapper;
 use Doctrine\ORM\EntityManagerInterface;
@@ -42,7 +43,8 @@ class ItemService
                                 private SearchService  $searchService,
                                 private Index $index,
                                 private Security $security,
-                                private array $searchFields)
+                                private array $searchFields,
+                                private LikeRepository $likeRepository,)
     {
     }
 
@@ -154,9 +156,11 @@ class ItemService
      */
     public function getItemWithLikes(int $itemId): ItemWithLikesResponse
     {
+        $user = $this->security->getUser();
+        $like = $this->likeRepository->findByUserAndItemId($itemId, $user?->getUserIdentifier());
         $res = $this->itemRepository->getItemWithLikes($itemId);
         if(!$res) throw new ItemNotFoundException();
-        return $this->itemMapper->mapToItemWithLikesDto($res);
+        return $this->itemMapper->mapToItemWithLikesDto($res, $like);
     }
 
     public function getLastAddedItems(): array

@@ -8,6 +8,7 @@ use App\DTO\ItemDTO\SearchItemResponse;
 use App\DTO\Pojo\CustomFieldItemWithLikes;
 use App\DTO\Pojo\Item;
 use App\Entity\ItemCustomField;
+use App\Entity\Like;
 use Elastica\Result;
 
 class ItemMapper
@@ -21,10 +22,10 @@ class ItemMapper
         return $resDto;
     }
 
-    public function mapToItemWithLikesDto(\App\Entity\Item $item): ItemWithLikesResponse
+    public function mapToItemWithLikesDto(\App\Entity\Item $item, ?Like $like): ItemWithLikesResponse
     {
         $customFields = [];
-        $dto = new ItemWithLikesResponse($item->getName(), $item->getLikes()->count());
+        $dto = new ItemWithLikesResponse($item->getName(), $item->getLikes()->count(), (bool)$like);
         $this->getItemWithLikesDtoCustomFields($customFields, $item);
         $dto->setCustomFields($customFields);
         return $dto;

@@ -1,0 +1,7 @@
+invalid_credentials: "Twój e-mail lub hasło są nieprawidłowe. Spróbuj ponownie."
+email_already_exist: "Adres e-mail już istnieje"
+category_not_found: "Kategoria nie znaleziona"
+collection_not_found: "Kolekcja nie znaleziona"
+user_not_found: "Użytkownik nie znaleziony"
+item_not_found: "Przedmiot nie znaleziony"
+user_blocked: "Twoje konto jest zablokowane. Skontaktuj się z administratorem."

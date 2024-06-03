@@ -35,17 +35,6 @@ class OpenApiItemController extends AbstractController
         return new JsonResponse($jsonRes, Response::HTTP_OK, [], true);
     }
 
-    /**
-     * @throws ItemNotFoundException
-     */
-    #[Route('/get/item', name: 'get_item_with_likes', methods: ['GET'])]
-    public function getItemWithLikes(Request $request): JsonResponse {
-        $itemId = $request->query->getInt("itemId");
-        $res = $this->itemService->getItemWithLikes($itemId);
-        $jsonRes = $this->serializer->serialize($res, 'json');
-        return new JsonResponse($jsonRes, Response::HTTP_OK, [], true);
-    }
-
     #[Route('/search/items', name: 'search_items', methods: ['GET'])]
     public function searchItems(Request $request): JsonResponse
     {
