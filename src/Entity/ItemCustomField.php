@@ -18,7 +18,8 @@ class ItemCustomField
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private Item $item;
 
-    #[ORM\ManyToOne(targetEntity: CustomField::class)]
+    #[ORM\ManyToOne(targetEntity: CustomField::class, inversedBy: "itemCustomFields")]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private ?CustomField $customField;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
