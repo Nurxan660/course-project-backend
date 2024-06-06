@@ -1,48 +1,48 @@
 fos_elastica:
-    clients:
-        default:
-            connections:
-                - host: '%env(ELASTIC_HOST)%'
-                  port: '443'
-                  transport: 'https'
-                  username: '%env(ELASTIC_USERNAME)%'
-                  password: '%env(ELASTIC_PASSWORD)%'
-                  curl:
-                      64: false  # CURLOPT_SSL_VERIFYPEER
-                      81: false  # CURLOPT_SSL_VERIFYHOST
-    indexes:
-        items:
-            properties:
-                id: ~
-                name: ~
-                tags:
-                    type: "nested"
-                    properties:
-                        name: ~
-                collection:
-                    type: "object"
-                    properties:
-                        id: ~
-                        name: ~
-                        description: ~
-                        user:
-                            type: "object"
-                            properties:
-                                id: ~
-                                fullName: ~
-            persistence:
-                driver: orm
-                model: App\Entity\Item
-                provider: ~
-                finder: ~
-                listener: ~
+  clients:
+    default:
+      connections:
+        - host: '%env(ELASTIC_HOST)%'
+          port: '443'
+          transport: 'https'
+          username: '%env(ELASTIC_USERNAME)%'
+          password: '%env(ELASTIC_PASSWORD)%'
+          curl:
+            64: false
+            81: false
+  indexes:
+    items:
+      properties:
+        id: ~
+        name: ~
         tags:
-            properties:
+          type: "nested"
+          properties:
+            name: ~
+        collection:
+          type: "object"
+          properties:
+            id: ~
+            name: ~
+            description: ~
+            user:
+              type: "object"
+              properties:
                 id: ~
-                name: ~
-            persistence:
-                driver: orm
-                model: App\Entity\Tag
-                provider: ~
-                finder: ~
-                listener: ~
+                fullName: ~
+      persistence:
+        driver: orm
+        model: App\Entity\Item
+        provider: ~
+        finder: ~
+        listener: ~
+    tags:
+      properties:
+        id: ~
+        name: ~
+      persistence:
+        driver: orm
+        model: App\Entity\Tag
+        provider: ~
+        finder: ~
+        listener: ~

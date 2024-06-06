@@ -29,7 +29,7 @@ class CollectionMapper
         return new CollectionEditRes(
             $query[0]['id'], $query[0]['name'],
             $query[0]['description'], $query[0]['imageUrl'],
-            $query[0]['categoryName']
+            $query[0]['categoryName'], $query[0]['isPublic']
         );
     }
 

@@ -11,6 +11,7 @@ class CollectionDataReq
     private string $description;
     #[Assert\NotBlank]
     private string $category;
+    private bool $public;
     private ?string $imageUrl = null;
     #[Assert\All([
         new Assert\Collection([
@@ -74,4 +75,18 @@ class CollectionDataReq
     {
         $this->customFields = $customFields;
     }
+
+    public function isPublic(): bool
+    {
+        return $this->public;
+    }
+
+    public function setPublic(bool $public): void
+    {
+        $this->public = $public;
+    }
+
+
+
+
 }

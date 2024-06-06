@@ -60,7 +60,7 @@ class CollectionService
     private function createCollection(CollectionDataReq $req, CollectionCategory $category): UserCollection
     {
         return new UserCollection($req->getName(), $req->getDescription(),
-            $req->getImageUrl(), $category, $this->security->getUser());
+            $req->getImageUrl(), $category, $this->security->getUser(), $req->isPublic());
     }
 
     public function getCollections(int $page): CollectionPaginationRes
@@ -148,6 +148,7 @@ class CollectionService
         $collection->setCategory($category);
         $collection->setDescription($req->getDescription());
         $collection->setImageUrl($req->getImageUrl());
+        $collection->setIsPublic($req->isPublic());
         return $collection;
     }
 }
