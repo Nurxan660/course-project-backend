@@ -31,6 +31,7 @@ security:
                 path: api_token_invalidate
     access_control:
         - { path: ^/api/admin, roles: ROLE_ADMIN }
+        - { path: ^/api/jira, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/api/item/get/item, roles: PUBLIC_ACCESS }
         - { path: ^/api/(login|token/refresh), roles: PUBLIC_ACCESS }
         - { path: ^/api, roles: ROLE_USER }

@@ -26,7 +26,7 @@ class UserCollection
     private ?string $imageUrl;
 
     #[ORM\Column]
-    private bool $isPublic = false;
+    private bool $isPublic;
 
     #[ORM\ManyToOne(targetEntity: CollectionCategory::class, fetch: 'EAGER')]
     private CollectionCategory $category;

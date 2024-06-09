@@ -9,4 +9,5 @@ like_removed: "Like removed"
 user_blocked_response: "The blocking was successful"
 user_deleted_response: "The deleting was successful"
 user_role_changed_response: "The role change was successful"
+ticket_created_response: "The ticket was successfully created"
 
