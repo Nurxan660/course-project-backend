@@ -35,6 +35,9 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     #[ORM\Column(length: 255)]
     private string $password;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $jiraAccountId = null;
+
     #[ORM\Column(type: 'string', enumType: Role::class)]
     private Role $role;
 
@@ -115,5 +118,15 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     public function isBlocked(): bool
     {
         return $this->isBlocked;
+    }
+
+    public function getJiraAccountId(): ?string
+    {
+        return $this->jiraAccountId;
+    }
+
+    public function setJiraAccountId(?string $jiraAccountId): void
+    {
+        $this->jiraAccountId = $jiraAccountId;
     }
 }

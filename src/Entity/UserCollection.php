@@ -25,6 +25,9 @@ class UserCollection
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $imageUrl;
 
+    #[ORM\Column]
+    private bool $isPublic;
+
     #[ORM\ManyToOne(targetEntity: CollectionCategory::class, fetch: 'EAGER')]
     private CollectionCategory $category;
 
@@ -38,7 +41,7 @@ class UserCollection
     #[ORM\OneToMany(targetEntity: Item::class, mappedBy: 'collection', cascade: ['persist', 'remove'],  fetch: 'EAGER')]
     private Collection $items;
 
-    public function __construct(string $name, string $description, ?string $imageUrl, CollectionCategory $category, User $user)
+    public function __construct(string $name, string $description, ?string $imageUrl, CollectionCategory $category, User $user, bool $public)
     {
         $this->name = $name;
         $this->description = $description;
@@ -47,6 +50,7 @@ class UserCollection
         $this->customFields = new ArrayCollection();
         $this->items = new ArrayCollection();
         $this->user = $user;
+        $this->isPublic = $public;
     }
 
     public function addCustomField(CustomField $customField): void {
@@ -128,5 +132,15 @@ class UserCollection
     public function getItems(): Collection
     {
         return $this->items;
+    }
+
+    public function isPublic(): bool
+    {
+        return $this->isPublic;
+    }
+
+    public function setIsPublic(bool $isPublic): void
+    {
+        $this->isPublic = $isPublic;
     }
 }

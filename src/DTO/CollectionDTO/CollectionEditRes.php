@@ -11,6 +11,7 @@ class CollectionEditRes
     private string $description;
     private ?string $imageUrl;
     private string $category;
+    private bool $isPublic;
     private array $customFields = [];
 
     /**
@@ -21,13 +22,14 @@ class CollectionEditRes
      * @param string $category
      * @param array $customFields
      */
-    public function __construct(int $id, string $name, string $description, ?string $imageUrl, string $category)
+    public function __construct(int $id, string $name, string $description, ?string $imageUrl, string $category, bool $isPublic)
     {
         $this->id = $id;
         $this->name = $name;
         $this->description = $description;
         $this->imageUrl = $imageUrl;
         $this->category = $category;
+        $this->isPublic = $isPublic;
     }
 
     public function addCustomField(CustomField $customField): void
@@ -94,4 +96,16 @@ class CollectionEditRes
     {
         $this->customFields = $customFields;
     }
+
+    public function isPublic(): bool
+    {
+        return $this->isPublic;
+    }
+
+    public function setIsPublic(bool $isPublic): void
+    {
+        $this->isPublic = $isPublic;
+    }
+
+
 }

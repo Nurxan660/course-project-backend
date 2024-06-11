@@ -6,6 +6,9 @@
 parameters:
     search.item.fields: ['name', 'tags.name', 'collection.name', 'collection.description',
     'collection.user.fullName']
+    jira.base_url: '%env(JIRA_BASE_URL)%'
+    jira.email: '%env(JIRA_ADMIN_EMAIL)%'
+    jira.api_token: '%env(JIRA_ADMIN_TOKEN)%'
 
 
 services:
@@ -43,6 +46,12 @@ services:
         arguments:
             $finder: '@fos_elastica.finder.tags'
 
+    App\Service\JiraService:
+        arguments:
+            $jiraBaseUrl: '%jira.base_url%'
+            $jiraEmail: '%jira.email%'
+            $jiraApiToken: '%jira.api_token%'
+
     App\Service\AdminService:
         arguments:
             $index: '@fos_elastica.index.items'
@@ -76,6 +85,9 @@ services:
         tags:
             - { name: app.exception_handler }
     App\Exception\ExceptionHandler\ValidationExceptionHandler:
+        tags:
+            - { name: app.exception_handler }
+    App\Exception\ExceptionHandler\CreateTicketExceptionHandler:
         tags:
             - { name: app.exception_handler }
 
